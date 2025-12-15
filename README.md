@@ -28,7 +28,7 @@ Le projet est hébergé sur Github : [https://github.com/Clouddy23/UEL313-G6-S4/
 
 ### Répartition du travail
 
-| Activité      | Activité | Responsable(s) | Branche |
+| Activité | Responsable(s) | Branche |
 |---|---|---|
 | Installation Symfony + configuration environnement | Mathilde Chauvet | `main` |
 | Configuration BDD + migrations (Doctrine) |        | `feature/db-migrations` |
