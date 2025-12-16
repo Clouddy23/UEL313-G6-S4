@@ -53,7 +53,51 @@ Une réunion visio d'équipe est prévue à chaque fin d'échéance.
 
 ## Développement du projet
 
-### Installation de Symfony CLI 6.4 LTS
+### Installation de Symfony CLI 6.4 LTS (MacOS + Terminal)
+
+**Outils utilisés** : 
+
+PHP + Composer + Symfony CLI + SQLite + DB Browser.
+Tous les outils doivent être disponibles “globalement” dans le terminal depuis n’importe quel dossier.
+
+**1) Installation et vérification de la version de Homebrew (gestionnaire de paquets)**
+
+``/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+brew --version
+brew --version``
+
+**2) Installation et vérification de la version PHP**
+
+``brew update
+brew install php
+php -v``
+
+**3) Vérification des extensions PHP requises (ZIP, SQLite, PDO_SQLITE**
+
+``php -m | grep -E "zip|sqlite|pdo_sqlite"``
+
+Le cas échéant, procéder à l'activation des extensions (suppression ";") :
+
+``php --ini
+extension=zip
+extension=pdo_sqlite
+extension=sqlite3``
+
+**4) Installation, mise à jour et vérification de la version de Composer (gestionnaire de dépendances PHP)**
+
+``brew install composer
+sudo composer self-update
+composer -V``
+
+**5) Installation et vérification de Symfony CLI et de ses prérequis**
+
+``brew install symfony-cli/tap/symfony-cli
+symfony -V
+symfony check:requirements``
+
+**6) Installation DB Browser pour SQLite (outil de visualisation BDD)**
+
+``brew install --cask db-browser-for-sqlite``
 
 ### Tests manuels fonctionnels
 
