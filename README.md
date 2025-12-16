@@ -99,6 +99,45 @@ symfony check:requirements``
 
 ``brew install --cask db-browser-for-sqlite``
 
+### Création du projet Symfony 6.4 LTS (Watson-Symfony)
+
+**1) Se placer dans le dossier de travail (emplacement du projet)**  
+
+## Création du projet Symfony 6.4 LTS
+
+**1) Création du dossier "watson-symfonye**  
+
+Création d’un nouveau projet Symfony dans un dossier `watson-symfony` en forçant la version 6.4 LTS :
+
+``symfony new watson-symfony --version="6.4.*" --webapp
+cd watson-symfony``
+
+**2) Configuration de SQLite dans .env.local**
+
+On copie .env vers .env.local afin de : préserver la configuration par défaut (.env) et permettre à chaque membre du groupe d’avoir sa configuration locale (.env.local)
+
+``cp .env .env.local
+code .env.local``
+
+Dans .env.local, activer SQLite (supprimer #) et désactiver PostgreSQL/MySQL (ajouter #) :
+DATABASE_URL="sqlite:///%kernel.project_dir%/var/data_%kernel.environment%.db"
+# DATABASE_URL="mysql://app:!ChangeMe!@127.0.0.1:3306/app?serverVersion=8.0.32&charset=utf8mb4"
+# DATABASE_URL="mysql://app:!ChangeMe!@127.0.0.1:3306/app?serverVersion=10.11.2-MariaDB&charset=utf8mb4"
+# DATABASE_URL="postgresql://app:!ChangeMe!@127.0.0.1:5432/app?serverVersion=16&charset=utf8"
+
+Avec SQLite, la BDD est un fichier .db qui sera créé lors des migrations (après création des entités).
+
+**4) Test du lancement du serveur Symfony**
+
+``cd "./S4/watson-symfony"
+symfony server:start``
+
+Se rendre à l'URL indiquée par le serveur : http://127.0.0.1:8000
+
+
+
+
+
 ### Tests manuels fonctionnels
 
 ### Webographie
