@@ -8,6 +8,7 @@ le projet est hébergé sur Github [https://github.com/Clouddy23/UEL313-G6-S4/](
 **Licence** : 
 projet pédagogique — usage formation.
 
+---
 
 ## Objectifs
 - Mettre en place une application Symfony **6.4 (LTS)**
@@ -56,6 +57,7 @@ Une réunion visio d'équipe est prévue à chaque fin d'échéance.
 | 18/12 | Phase de relecture : Review et correction des branches (PR). |
 | 19/12 | Fin du projet : Tests manuels fonctionnels, fusion des branches vers `main`, finalisation du PDF. |
 
+---
 
 ## Développement du projet
 
