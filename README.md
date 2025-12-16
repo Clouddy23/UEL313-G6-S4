@@ -30,14 +30,15 @@ Le projet est hébergé sur Github : [https://github.com/Clouddy23/UEL313-G6-S4/
 
 ### Répartition du travail
 
-| Activité                                           | Responsable(s)                 | Branche                 |
-| -------------------------------------------------- | ------------------------------ | ----------------------- |
-| Installation Symfony + configuration environnement | Mathilde Chauvet               | `main`                  |
-| Configuration BDD + migrations (Doctrine)          | Filippos K.                    | `feature/db-migrations` |
-| CRUD Link (Entity, Form, Controller, Twig)         |                                | `feature/crud-link`     |
-| UI Twig/CSS (base)                                 | Kamo Guillon                   | `feature/ui`            |
-| Back office + sécurité                             |                                | `feature/backoffice`    |
-| Documentation + captures + PDF                     | Filippos K. & Mathilde Chauvet | `feature/documentation` |
+| Activité | Responsable(s) | Branche |
+|---|---|---|
+| Installation Symfony + configuration environnement | Mathilde Chauvet | `main` |
+| Création de la BDD, des entités et interfaces | Filippos K. | `feature/datastructure` |
+| CRUD Link (Entity, Form, Controller, Twig) | Mathieu Leyssene | `feature/crud-link` |
+| UI Twig/CSS (base) | Kamo Guillon | `feature/ui` |
+| Back office + sécurité |          | `feature/backoffice` |
+| Documentation + captures + PDF    | Filippos K. & Mathilde Chauvet | `feature/documentation` |
+
 
 ### Calendrier
 
