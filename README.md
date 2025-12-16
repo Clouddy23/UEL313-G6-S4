@@ -134,9 +134,7 @@ symfony server:start``
 
 Se rendre à l'URL indiquée par le serveur : http://127.0.0.1:8000
 
-
-
-
+![Home page Symfony](assets/screenshots/home-page-symfony.png)
 
 ### Tests manuels fonctionnels
 
