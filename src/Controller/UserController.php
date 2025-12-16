@@ -8,18 +8,12 @@ use Symfony\Component\Routing\Attribute\Route;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\User;
 
-use Nelmio\ApiDocBundle\Attribute\Security; // A utiliser si des routes nécessitent une authentification (si on a le temps de mettre cela en place)
+use Nelmio\ApiDocBundle\Attribute\Security; // A utiliser si des routes nécessitent une authentification (si on a le temps de mettre cela en place...)
 use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\Request;
 
 final class UserController extends AbstractController
 {
-    #[Route('/user', name: 'app_user', methods: ['GET'])]
-    public function index(): Response
-    {
-        return new Response('UserController index');
-    }
-
     #[OA\Get(
         path: '/users',
         summary: 'Retourne la liste de tous les utilisateurs',
@@ -105,5 +99,119 @@ final class UserController extends AbstractController
             'lastname' => $user->getLastname(),
             'administrator' => $user->isAdministrator(),
         ], 201);
+    }
+
+    #[OA\Put(
+        path: '/users/{id}',
+        summary: 'Modifie un utilisateur existant',
+        tags: ['Users'],
+        parameters: [
+            new OA\Parameter(
+                name: 'id',
+                in: 'path',
+                required: true,
+                schema: new OA\Schema(type: 'integer')
+            )
+        ],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                properties: [
+                    new OA\Property(property: 'login', type: 'string'),
+                    new OA\Property(property: 'password', type: 'string'),
+                    new OA\Property(property: 'firstname', type: 'string'),
+                    new OA\Property(property: 'lastname', type: 'string'),
+                    new OA\Property(property: 'administrator', type: 'boolean'),
+                ]
+            )
+        ),
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Utilisateur modifié',
+            ),
+            new OA\Response(
+                response: 404,
+                description: 'Utilisateur non trouvé'
+            )
+        ]
+    )]
+    #[Route('/users/{id}', name: 'user_update', methods: ['PUT'])]
+    public function updateUser(
+        int $id,
+        EntityManagerInterface $entityManager,
+        Request $request
+    ): Response {
+        $user = $entityManager->getRepository(User::class)->find($id);
+        if (!$user) {
+            return $this->json(['error' => 'User not found'], 404);
+        }
+
+        $data = json_decode($request->getContent(), true);
+
+        if (isset($data['login'])) {
+            $user->setLogin($data['login']);
+        }
+        if (isset($data['password'])) {
+            $user->setPassword($data['password']);
+        }
+        if (isset($data['firstname'])) {
+            $user->setFirstname($data['firstname']);
+        }
+        if (isset($data['lastname'])) {
+            $user->setLastname($data['lastname']);
+        }
+        if (isset($data['administrator'])) {
+            $user->setAdministrator((bool)$data['administrator']);
+        }
+
+        $entityManager->flush();
+
+        return $this->json([
+            'id' => $user->getId(),
+            'login' => $user->getLogin(),
+            'firstname' => $user->getFirstname(),
+            'lastname' => $user->getLastname(),
+            'administrator' => $user->isAdministrator(),
+        ]);
+    }
+
+    #[OA\Delete(
+        path: '/users/{id}',
+        summary: 'Supprime un utilisateur',
+        tags: ['Users'],
+        parameters: [
+            new OA\Parameter(
+                name: 'id',
+                in: 'path',
+                required: true,
+                schema: new OA\Schema(type: 'integer')
+            )
+        ],
+        responses: [
+            new OA\Response(
+                response: 204,
+                description: 'Utilisateur supprimé'
+            ),
+            new OA\Response(
+                response: 404,
+                description: 'Utilisateur non trouvé'
+            )
+        ]
+    )]
+    #[Route('/users/{id}', name: 'user_delete', methods: ['DELETE'])]
+    public function deleteUser(
+        int $id,
+        EntityManagerInterface $entityManager
+    ): Response {
+        $user = $entityManager->getRepository(User::class)->find($id);
+        if (!$user) {
+            return $this->json(['error' => 'User not found'], 404);
+        }
+
+        $entityManager->remove($user);
+        $entityManager->flush();
+
+        return new Response(null, 204);
     }
 }
