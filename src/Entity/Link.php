@@ -88,6 +88,8 @@ class Link implements LinkInterface
     }
 
     /**
+     * Gestion des tags associés au lien
+     * Retourne une collection de Tags associés à ce Link
      * @return Collection|Tag[]
      */
     public function getTags(): Collection
@@ -95,6 +97,10 @@ class Link implements LinkInterface
         return $this->tags;
     }
 
+    /**
+     * Ajoute un Tag à la collection de Tags associés à ce Link
+     * @return self
+     */
     public function addTag(Tag $tag): self
     {
         if (!$this->tags->contains($tag)) {
@@ -103,6 +109,10 @@ class Link implements LinkInterface
         return $this;
     }
 
+    /**
+     * Retire un Tag de la collection de Tags associés à ce Link
+     * @return self
+     */
     public function removeTag(Tag $tag): self
     {
         $this->tags->removeElement($tag);

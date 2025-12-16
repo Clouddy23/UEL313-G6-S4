@@ -3,6 +3,7 @@
 namespace App\Entity\Interface;
 
 use Doctrine\Common\Collections\Collection;
+use App\Entity\Link;
 
 interface TagInterface
 {
@@ -13,6 +14,6 @@ interface TagInterface
      * @return Collection
      */
     public function getLinks(): Collection;
-    public function addLink(\App\Entity\Link $link): self;
-    public function removeLink(\App\Entity\Link $link): self;
+    public function addLink(Link $link): self;
+    public function removeLink(Link $link): self;
 }

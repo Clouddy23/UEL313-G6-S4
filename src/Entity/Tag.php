@@ -45,6 +45,8 @@ class Tag implements TagInterface
     }
 
     /**
+     * Gestion des liens associés au tag
+     * Retourne une collection de Link associés à ce Tag
      * @return Collection|Link[]
      */
     public function getLinks(): Collection
@@ -52,6 +54,10 @@ class Tag implements TagInterface
         return $this->links;
     }
 
+    /**
+     * Ajoute un lien à ce tag
+     * @return self
+     */
     public function addLink(Link $link): self
     {
         if (!$this->links->contains($link)) {
@@ -61,6 +67,10 @@ class Tag implements TagInterface
         return $this;
     }
 
+    /**
+     * Retire un lien de ce tag
+     * @return self
+     */
     public function removeLink(Link $link): self
     {
         if ($this->links->removeElement($link)) {
