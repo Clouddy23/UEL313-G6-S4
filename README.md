@@ -12,7 +12,7 @@ Dépôt public : Le projet est hébergé sur Github : [https://github.com/Cloudd
   - **Ajouter** un lien via formulaire (**titre**, **URL**, **descriptif**)
   - **Mettre à jour** un lien
   - **Supprimer** un lien
-- (Optionnel) Approcher davantage le projet “Watson” en ajoutant :
+- Approcher davantage le projet “Watson” en ajoutant :
   - Des **mots-clés** associés aux liens
   - Un **back office** sécurisé
   - Une **gestion d’utilisateurs**
