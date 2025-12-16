@@ -9,13 +9,11 @@
 
 ## Objectifs
 - Mettre en place une application Symfony **6.4 (LTS)**
-<br>
 - Développer une gestion de liens stockés en base de données :
   - **Lister** les liens
   - **Ajouter** un lien via formulaire (**titre**, **URL**, **descriptif**)
   - **Mettre à jour** un lien
   - **Supprimer** un lien
- <br>
 - Approcher davantage le projet “Watson” en ajoutant :
   - Des **mots-clés** associés aux liens
   - Un **back office** sécurisé
