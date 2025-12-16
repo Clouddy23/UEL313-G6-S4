@@ -24,7 +24,7 @@
 ## Principe général de collaboration
 
 ### Membres du groupe
-Tous les membres du groupe ont contribué de manière équilibrée et proportionnelle au projet.
+<br> Tous les membres du groupe ont contribué de manière équilibrée et proportionnelle au projet.
 
 | Étudiant.e  | Alias     |
 |:----------:|:----------:|
