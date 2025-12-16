@@ -59,12 +59,6 @@ Une réunion visio d'équipe est prévue à chaque fin d'échéance.
 
 ### Webographie
 
-## Webographie / Ressources
-
-## Webographie / Ressources
-
-## Webographie / Ressources
-
 - Installation de PHP : [https://www.php.net/downloads.php](https://www.php.net/downloads.php)
 - Installation de Composer : [https://getcomposer.org/](https://getcomposer.org/)
 - Installation de Symfony CLI : [https://symfony.com/download](https://symfony.com/download)
