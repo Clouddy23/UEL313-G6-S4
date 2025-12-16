@@ -25,10 +25,12 @@ class Link implements LinkInterface
     #[ORM\Column(type: "string")]
     private string $desc;
 
+    // Chaque lien est associé à un utilisateur
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: "links")]
     #[ORM\JoinColumn(nullable: false)]
     private User $user;
 
+    // Un lien peut avoir plusieurs tags
     #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: "links")]
     #[ORM\JoinTable(name: "link_tag")]
     private Collection $tags;

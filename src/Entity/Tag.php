@@ -20,6 +20,7 @@ class Tag implements TagInterface
     #[ORM\Column(type: "string")]
     private string $name;
 
+    // Un tag peut être associé à plusieurs liens
     #[ORM\ManyToMany(targetEntity: Link::class, mappedBy: "tags")]
     private Collection $links;
 
