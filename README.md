@@ -24,7 +24,7 @@
 ## Principe général de collaboration
 
 ### Membres du groupe
-<br> Tous les membres du groupe ont contribué de manière équilibrée et proportionnelle au projet.
+Tous les membres du groupe ont contribué de manière équilibrée et proportionnelle au projet.
 
 | Étudiant.e  | Alias     |
 |:----------:|:----------:|
@@ -63,10 +63,7 @@ Une réunion visio d'équipe est prévue à chaque fin d'échéance.
 
 **Outils utilisés** : 
 
-PHP + Composer + Symfony CLI + SQLite + DB Browser.
-
-Tous les outils doivent être disponibles “globalement” dans le terminal depuis n’importe quel dossier.
-
+PHP + Composer + Symfony CLI + SQLite + DB Browser. <br> Tous les outils doivent être disponibles “globalement” dans le terminal depuis n’importe quel dossier.
 
 **1) Installation et vérification de la version de Homebrew (gestionnaire de paquets)**
 
@@ -74,25 +71,21 @@ Tous les outils doivent être disponibles “globalement” dans le terminal dep
 brew --version
 brew --version``
 
-
 **2) Installation et vérification de la version PHP**
 
 ``brew update
 brew install php
 php -v``
 
-
 **3) Vérification des extensions PHP requises (ZIP, SQLite, PDO_SQLITE**
 
 ``php -m | grep -E "zip|sqlite|pdo_sqlite"``
 
-Le cas échéant, procéder à l'activation des extensions (suppression ";") :
-
+Le cas échéant, procéder à l'activation des extensions (suppression ";") : <br>
 ``php --ini
 extension=zip
 extension=pdo_sqlite
 extension=sqlite3``
-
 
 **4) Installation, mise à jour et vérification de la version de Composer (gestionnaire de dépendances PHP)**
 
@@ -115,26 +108,20 @@ symfony check:requirements``
 
 ### Création du projet Symfony 6.4 LTS (Watson-Symfony)
 
-
 **1) Se placer dans le dossier de travail (emplacement du projet)**  
 
-Création d’un nouveau projet Symfony dans un dossier `watson-symfony` en forçant la version 6.4 LTS :
-
+Création d’un nouveau projet Symfony dans un dossier `watson-symfony` en forçant la version 6.4 LTS : <br>
 ``symfony new watson-symfony --version="6.4.*" --webapp
 cd watson-symfony``
 
-
 **2) Configuration de SQLite dans .env.local**
 
-On copie .env vers .env.local afin de : préserver la configuration par défaut (.env) et permettre à chaque membre du groupe d’avoir sa configuration locale (.env.local)
-
+On copie .env vers .env.local afin de : préserver la configuration par défaut (.env) et permettre à chaque membre du groupe d’avoir sa configuration locale (.env.local) : <br>
 ``cp .env .env.local
 code .env.local``
 
-Dans .env.local, activer DATABASE_URL="SQLite..." (supprimer #) et désactiver DATABASE_URL="postgesql..." (ajouter #) :
-
+Dans .env.local, activer DATABASE_URL="SQLite..." (supprimer #) et désactiver DATABASE_URL="postgesql..." (ajouter #). <br>
 Avec SQLite, la BDD est un fichier .db qui sera créé lors des migrations (après création des entités).
-
 
 **3) Test du lancement du serveur Symfony**
 
