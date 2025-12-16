@@ -166,6 +166,12 @@ Nous avons ensuite procédé à des tests de fonctionnement des différentes rou
 
 ![Nelmio](/docs/nelmio_users.png)
 
+### Création du contrôleur pour les _Liens_
+
+Nous avons également créé les différentes méthodes CRUD pour du contrôleur appelé par la route `/links`.
+
+![Nelmio_links](/docs/nelmio_links.png)
+
 ### Tests manuels fonctionnels
 
 ### Webographie
