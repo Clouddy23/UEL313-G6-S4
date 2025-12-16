@@ -32,7 +32,8 @@ final class UserController extends AbstractController
             ->getRepository(User::class)
             ->findAll();
 
-        return $this->json(['users' => $users]);
+        //return $this->render('users/list.html.twig', ['users' => $users]); // For web page rendering
+        return $this->json(['users' => $users]); // For API test purposes
     }
 
     #[OA\Post(
