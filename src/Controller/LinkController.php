@@ -44,7 +44,8 @@ final class LinkController extends AbstractController
             ];
         }, $links);
 
-        return $this->json(['links' => $data]);
+        //return $this->render('links/list.html.twig', ['links' => $links]); // For web page rendering
+        return $this->json(['links' => $data]); // For API test purposes
     }
 
     #[OA\Post(
