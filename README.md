@@ -1,17 +1,19 @@
 # UEL313-G6-S4
-Projet Symfony 6.4 (LTS) en groupe : gestion de liens (CRUD) stockés en base (listing, ajout, édition, suppression) + Documentation complète (méthode, organisation, captures, ressources)
-
-## Dépôt public
-
-Le projet est hébergé sur Github : [https://github.com/Clouddy23/UEL313-G6-S4/](https://github.com/Clouddy23/UEL313-G6-S4/)
+Projet universitaire Symfony 6.4 (LTS) en groupe : application de gestion de liens stockés en base de données (CRUD : listing, ajout, modification, suppression).
+Dépôt public : Le projet est hébergé sur Github : [https://github.com/Clouddy23/UEL313-G6-S4/](https://github.com/Clouddy23/UEL313-G6-S4/)
 
 ## Objectifs
-- Réaliser une **installation Symfony 6.4 (LTS)**.
-- Mettre en place des fonctionnalités proches du précédent projet “Watson” :
-  - **Lister** les liens stockés en base de données
-  - **Ajouter** un lien via formulaire (titre, URL, descriptif)
+- Mettre en place une application Symfony **6.4 (LTS)**
+- Développer une gestion de liens stockés en base de données :
+  - **Lister** les liens
+  - **Ajouter** un lien via formulaire (**titre**, **URL**, **descriptif**)
   - **Mettre à jour** un lien
   - **Supprimer** un lien
+- (Optionnel) Approcher davantage le projet “Watson” en ajoutant :
+  - Des **mots-clés** associés aux liens
+  - Un **back office** sécurisé
+  - Une **gestion d’utilisateurs**
+  - Un rendu **Twig/CSS** de base
 
 ---
 
@@ -19,36 +21,34 @@ Le projet est hébergé sur Github : [https://github.com/Clouddy23/UEL313-G6-S4/
 
 ### Membres du groupe
 
-| Étudiant.e  | Alias      | % participation |
-|:----------:|:----------:|:---------------:|
-| Mathilde C.| Clouddy23  |                 |
-| Kamo G.    | Spaghette5 |                 |
-| Mathieu L. | mathleys   |                 |
-| Filippos K.| filkat34   |                 |
+| Étudiant.e  | Alias     |
+|:----------:|:----------:|
+| Mathilde C.| Clouddy23  |
+| Kamo G.    | Spaghette5 |
+| Mathieu L. | mathleys   |
+| Filippos K.| filkat34   |
 
 ### Répartition du travail
 
 | Activité | Responsable(s) | Branche |
 |---|---|---|
-| Installation Symfony + configuration environnement | Mathilde Chauvet | `main` |
-| Création de la BDD, des entités et interfaces | Filippos K. | `feature/datastructure` |
-| CRUD Link (Entity, Form, Controller, Twig) | Mathieu Leyssene | `feature/crud-link` |
-| UI Twig/CSS (base) | Kamo Guillon | `feature/ui` |
-| Back office + sécurité |          | `feature/backoffice` |
-| Documentation + captures + PDF    | Filippos K. & Mathilde Chauvet | `feature/documentation` |
+| Base projet (Symfony 6.4 LTS) + configuration environnement | Mathilde Chauvet (Clouddy23) | `main` |
+| Modèle de données (BDD + entités + migrations) | Filippos K. (filkat34) | `feature/datastructure` |
+| CRUD Link (Entity, Form, Controller, Twig) | Mathieu L. (mathleys) | `feature/crud-link/...` |
+| UI Twig/CSS (base) | Kamo G. (Spaghette5) | `feature/ui` |
+| (Option) Back office + sécurité | Mathieu L. (mathleys) | `feature/backoffice` |
+| Documentation + captures + PDF (README → PDF) | Filippos K. (filkat34) & Mathilde C. (Clouddy23) | / |
 
+### Calendrier de suivi du projet
+Une réunion visio d'équipe est prévue à chaque fin d'échéance.
 
-### Calendrier
-
-Une réunion d'équipe est prévue à chaque fin d'échéance.
-
-| Echéance | Objectif |
+| Échéance | Objectif |
 |:--------:|:---------|
-| 15/12 | Phase d'installation et de réflexion : installation Symfony 6.4 LTS, choix techniques, préparation du reposity, choix techniques (BDD, UI...) et répartition des tâches et création des issues/branches. |
-| 16/12 | Phase de développement : mise en place du modèle + début CRUD sur des branches distinctes. |
-| 17/12 | Phase de développement : CRUD complet, validations formulaire, messages utilisateur, UI |
-| 18/12 | Relecture des branches (PR), corrections, fusion vers `main` et tests manuels fonctionnels (parcours CRUD) |
-| 19/12 | Finalisation du rendu : captures écran, schémas, rédaction et export du PDF, ajout des ressources et % participation. |
+| 15/12 | Phase d’installation : installation Symfony 6.4 LTS, préparation du repository. |
+| 16/12 | Visio d'organisation : répartition des tâches, création des issues/branches. |
+| 17/12 | Phase de développement : ???. |
+| 18/12 | Phase de relecture : Review et correction des branches (PR). |
+| 19/12 | Fin du projet : Tests manuels fonctionnels, fusion des branches vers `main`, finalisation du PDF (captures, schémas, webographie. |
 
 ## Développement du projet
 
