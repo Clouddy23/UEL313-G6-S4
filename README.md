@@ -3,6 +3,8 @@
 
 **Dépôt public** : le projet est hébergé sur Github [https://github.com/Clouddy23/UEL313-G6-S4/](https://github.com/Clouddy23/UEL313-G6-S4/)
 
+**Licence** : projet pédagogique — usage formation.
+
 ---
 
 ## Objectifs
@@ -49,11 +51,15 @@ Une réunion visio d'équipe est prévue à chaque fin d'échéance.
 | 16/12 | Visio d'organisation : répartition des tâches, création des issues/branches. |
 | 17/12 | Phase de développement : ???. |
 | 18/12 | Phase de relecture : Review et correction des branches (PR). |
-| 19/12 | Fin du projet : Tests manuels fonctionnels, fusion des branches vers `main`, finalisation du PDF (captures, schémas, webographie. |
+| 19/12 | Fin du projet : Tests manuels fonctionnels, fusion des branches vers `main`, finalisation du PDF. |
 
 ## Développement du projet
 
-## Tests manuels fonctionnels
+### Installation de Symfony CLI 6.4 LTS
 
-## Licence
-Projet pédagogique — usage formation.
+### Tests manuels fonctionnels
+
+### Webographie
+
+
+
