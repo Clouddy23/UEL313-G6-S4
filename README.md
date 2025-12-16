@@ -5,6 +5,7 @@
 
 **Licence** : projet pédagogique — usage formation.
 
+
 ## Objectifs
 - Mettre en place une application Symfony **6.4 (LTS)**
 - Développer une gestion de liens stockés en base de données :
@@ -17,6 +18,7 @@
   - Un **back office** sécurisé
   - Une **gestion d’utilisateurs**
   - Un rendu **Twig/CSS** de base
+
 
 ## Principe général de collaboration
 
@@ -51,6 +53,7 @@ Une réunion visio d'équipe est prévue à chaque fin d'échéance.
 | 18/12 | Phase de relecture : Review et correction des branches (PR). |
 | 19/12 | Fin du projet : Tests manuels fonctionnels, fusion des branches vers `main`, finalisation du PDF. |
 
+
 ## Développement du projet
 
 ### Installation de Symfony CLI 6.4 LTS (MacOS + Terminal)
@@ -58,7 +61,9 @@ Une réunion visio d'équipe est prévue à chaque fin d'échéance.
 **Outils utilisés** : 
 
 PHP + Composer + Symfony CLI + SQLite + DB Browser.
+
 Tous les outils doivent être disponibles “globalement” dans le terminal depuis n’importe quel dossier.
+
 
 **1) Installation et vérification de la version de Homebrew (gestionnaire de paquets)**
 
@@ -66,11 +71,13 @@ Tous les outils doivent être disponibles “globalement” dans le terminal dep
 brew --version
 brew --version``
 
+
 **2) Installation et vérification de la version PHP**
 
 ``brew update
 brew install php
 php -v``
+
 
 **3) Vérification des extensions PHP requises (ZIP, SQLite, PDO_SQLITE**
 
@@ -83,11 +90,13 @@ extension=zip
 extension=pdo_sqlite
 extension=sqlite3``
 
+
 **4) Installation, mise à jour et vérification de la version de Composer (gestionnaire de dépendances PHP)**
 
 ``brew install composer
 sudo composer self-update
 composer -V``
+
 
 **5) Installation et vérification de Symfony CLI et de ses prérequis**
 
@@ -95,22 +104,22 @@ composer -V``
 symfony -V
 symfony check:requirements``
 
+
 **6) Installation DB Browser pour SQLite (outil de visualisation BDD)**
 
 ``brew install --cask db-browser-for-sqlite``
 
+
 ### Création du projet Symfony 6.4 LTS (Watson-Symfony)
 
+
 **1) Se placer dans le dossier de travail (emplacement du projet)**  
-
-## Création du projet Symfony 6.4 LTS
-
-**1) Création du dossier "watson-symfonye**  
 
 Création d’un nouveau projet Symfony dans un dossier `watson-symfony` en forçant la version 6.4 LTS :
 
 ``symfony new watson-symfony --version="6.4.*" --webapp
 cd watson-symfony``
+
 
 **2) Configuration de SQLite dans .env.local**
 
@@ -123,7 +132,8 @@ Dans .env.local, activer DATABASE_URL="SQLite..." (supprimer #) et désactiver D
 
 Avec SQLite, la BDD est un fichier .db qui sera créé lors des migrations (après création des entités).
 
-**4) Test du lancement du serveur Symfony**
+
+**3) Test du lancement du serveur Symfony**
 
 ``cd "./S4/watson-symfony"
 symfony server:start``
@@ -131,6 +141,7 @@ symfony server:start``
 Se rendre à l'URL indiquée par le serveur : http://127.0.0.1:8000
 
 ![Home page Symfony](assets/screenshots/home-page-symfony.png)
+
 
 ### Tests manuels fonctionnels
 
