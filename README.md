@@ -1,9 +1,12 @@
 # UEL313-G6-S4
-**Projet universitaire Symfony 6.4 (LTS) en groupe** : application de gestion de liens stockés en base de données (CRUD : listing, ajout, modification, suppression).
+**Projet universitaire Symfony 6.4 (LTS) en groupe** : 
+application de gestion de liens stockés en base de données (CRUD : listing, ajout, modification, suppression).
 
-**Dépôt public** : le projet est hébergé sur Github [https://github.com/Clouddy23/UEL313-G6-S4/](https://github.com/Clouddy23/UEL313-G6-S4/)
+**Dépôt public** : 
+le projet est hébergé sur Github [https://github.com/Clouddy23/UEL313-G6-S4/](https://github.com/Clouddy23/UEL313-G6-S4/)
 
-**Licence** : projet pédagogique — usage formation.
+**Licence** : 
+projet pédagogique — usage formation.
 
 
 ## Objectifs
