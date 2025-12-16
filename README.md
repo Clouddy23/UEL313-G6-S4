@@ -5,8 +5,6 @@
 
 **Licence** : projet pédagogique — usage formation.
 
----
-
 ## Objectifs
 - Mettre en place une application Symfony **6.4 (LTS)**
 - Développer une gestion de liens stockés en base de données :
@@ -60,6 +58,23 @@ Une réunion visio d'équipe est prévue à chaque fin d'échéance.
 ### Tests manuels fonctionnels
 
 ### Webographie
+
+## Webographie / Ressources
+
+## Webographie / Ressources
+
+## Webographie / Ressources
+
+- Installation de PHP : [https://www.php.net/downloads.php](https://www.php.net/downloads.php)
+- Installation de Composer : [https://getcomposer.org/](https://getcomposer.org/)
+- Installation de Symfony CLI : [https://symfony.com/download](https://symfony.com/download)
+- Installation de DB Browser pour SQLite : [https://sqlitebrowser.org/](https://sqlitebrowser.org/)
+- Calendrier des releases Symfony : [https://symfony.com/releases](https://symfony.com/releases)
+- Package - Symfony Demo : [https://packagist.org/packages/symfony/demo](https://packagist.org/packages/symfony/demo)
+- Démarrage de Symfony : [https://symfony.com/doc/current/setup.html](https://symfony.com/doc/current/setup.)
+
+
+
 
 
 
