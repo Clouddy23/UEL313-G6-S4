@@ -121,7 +121,12 @@ On copie .env vers .env.local afin de : préserver la configuration par défaut 
 code .env.local``
 
 Dans .env.local, activer DATABASE_URL="SQLite..." (supprimer #) et désactiver DATABASE_URL="postgesql..." (ajouter #). <br>
-Avec SQLite, la BDD est un fichier .db qui sera créé lors des migrations (après création des entités).
+
+**3) Installation de SQLite Browser**
+
+Avec SQLite, la BDD est un fichier .db qui sera créé lors des migrations (après création des entités). <br>
+La visualisation de la BDD peut se faire grâce à l'installation de DB Browser : <br>
+``brew install db-browser-for-sqlite``
 
 **3) Test du lancement du serveur Symfony**
 
