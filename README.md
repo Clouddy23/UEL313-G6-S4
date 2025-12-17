@@ -37,14 +37,14 @@ Tous les membres du groupe ont contribué de manière équilibrée et proportion
 
 ### Répartition du travail
 
-| Activité                                                    | Responsable(s)                                   | Branche                 |
-| ----------------------------------------------------------- | ------------------------------------------------ | ----------------------- |
-| Base projet (Symfony 6.4 LTS) + configuration environnement | Mathilde Chauvet (Clouddy23)                     | `main`                  |
-| Modèle de données (BDD + entités + migrations)              | Filippos K. (filkat34)                           | `feature/datastructure` |
-| CRUD Link (Entity, Form, Controller, Twig)                  | Mathieu L. (mathleys)                            | `feature/crud-link/...` |
-| UI Twig/CSS (base)                                          | Kamo G. (Spaghette5)                             | `feature/ui`            |
-| (Option) Back office + sécurité                             | Mathieu L. (mathleys)                            | `feature/backoffice`    |
-| Documentation + captures + PDF (README → PDF)               | Filippos K. (filkat34) & Mathilde C. (Clouddy23) | /                       |
+| Activité | Responsable(s) | Branche |
+|---|---|---|
+| Base projet (Symfony 6.4 LTS) + configuration environnement | Mathilde Chauvet (Clouddy23) | `main` |
+| Modèle de données (BDD + entités + migrations) | Filippos K. (filkat34) | `feature/datastructure` |
+| CRUD Link (Entity, Form, Controller, Twig) | Mathieu L. (mathleys) | `feature/link controller` `feature/tag controller` |
+| UI Twig/CSS (base) | Kamo G. (Spaghette5) | `feature/ui` |
+| (Option) Back office + sécurité | Mathieu L. (mathleys) | `feature/backoffice` |
+| Documentation + captures + PDF (README → PDF) | Filippos K. (filkat34) & Mathilde C. (Clouddy23) | / |
 
 ### Calendrier de suivi du projet
 
@@ -228,3 +228,10 @@ Pour faciliter les tests, les routes ont été documentées via Nelmio (Swagger 
 - Calendrier des releases Symfony : [https://symfony.com/releases](https://symfony.com/releases)
 - Package - Symfony Demo : [https://packagist.org/packages/symfony/demo](https://packagist.org/packages/symfony/demo)
 - Démarrage de Symfony : [https://symfony.com/doc/current/setup.html](https://symfony.com/doc/current/setup.)
+- Installation de Nelmio : [https://symfony.com/bundles/NelmioApiDocBundle/current/index.html#installation](https://symfony.com/bundles/NelmioApiDocBundle/current/index.html#installation)
+
+
+
+
+
+
