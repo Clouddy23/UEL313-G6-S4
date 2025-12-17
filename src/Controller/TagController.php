@@ -14,11 +14,26 @@ use Symfony\Component\Routing\Attribute\Route;
 final class TagController extends AbstractController
 {
     #[OA\Get(
-        path: '/tags',
+        path: '/api/tags',
         summary: 'Retourne la liste de tous les tags',
         tags: ['Tags'],
         responses: [new OA\Response(response: 200, description: 'Liste des tags')]
     )]
+    #[Route('/api/tags', name: 'api_tag_list', methods: ['GET'])]
+    public function apiListTags(EntityManagerInterface $em): Response
+    {
+        $tags = $em->getRepository(Tag::class)->findAll();
+
+        $data = array_map(fn(Tag $tag) => [
+            'id' => $tag->getId(),
+            'name' => $tag->getName(),
+            'link_ids' => array_map(fn(Link $l) => $l->getId(), $tag->getLinks()->toArray()),
+        ], $tags);
+
+        return $this->json(['tags' => $data]);
+    }
+
+    //WEB PAGE RENDERING --
     #[Route('/tags', name: 'tag_list', methods: ['GET'])]
     public function listTags(EntityManagerInterface $em): Response
     {
@@ -34,7 +49,7 @@ final class TagController extends AbstractController
     }
 
     #[OA\Get(
-        path: '/tags/{id}',
+        path: '/api/tags/{id}',
         summary: 'Retourne un tag par son ID',
         tags: ['Tags'],
         parameters: [new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))],
@@ -43,7 +58,7 @@ final class TagController extends AbstractController
             new OA\Response(response: 404, description: 'Tag non trouvé'),
         ]
     )]
-    #[Route('/tags/{id}', name: 'tag_show', methods: ['GET'])]
+    #[Route('/api/tags/{id}', name: 'api_tag_show', methods: ['GET'])]
     public function showTag(int $id, EntityManagerInterface $em): Response
     {
         $tag = $em->getRepository(Tag::class)->find($id);
@@ -57,7 +72,7 @@ final class TagController extends AbstractController
     }
 
     #[OA\Post(
-        path: '/tags',
+        path: '/api/tags',
         summary: 'Crée un nouveau tag',
         tags: ['Tags'],
         requestBody: new OA\RequestBody(
@@ -72,7 +87,7 @@ final class TagController extends AbstractController
             new OA\Response(response: 400, description: 'Données invalides / Tag déjà existant'),
         ]
     )]
-    #[Route('/tags', name: 'tag_create', methods: ['POST'])]
+    #[Route('/api/tags', name: 'api_tag_create', methods: ['POST'])]
     public function createTag(EntityManagerInterface $em, Request $request): Response
     {
         $data = json_decode($request->getContent(), true);
@@ -95,7 +110,7 @@ final class TagController extends AbstractController
     }
 
     #[OA\Put(
-        path: '/tags/{id}',
+        path: '/api/tags/{id}',
         summary: 'Modifie un tag existant',
         tags: ['Tags'],
         parameters: [new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))],
@@ -111,7 +126,7 @@ final class TagController extends AbstractController
             new OA\Response(response: 400, description: 'Nom déjà utilisé / invalide'),
         ]
     )]
-    #[Route('/tags/{id}', name: 'tag_update', methods: ['PUT'])]
+    #[Route('/api/tags/{id}', name: 'api_tag_update', methods: ['PUT'])]
     public function updateTag(int $id, EntityManagerInterface $em, Request $request): Response
     {
         $tag = $em->getRepository(Tag::class)->find($id);
@@ -136,7 +151,7 @@ final class TagController extends AbstractController
     }
 
     #[OA\Delete(
-        path: '/tags/{id}',
+        path: '/api/tags/{id}',
         summary: 'Supprime un tag',
         tags: ['Tags'],
         parameters: [new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))],
@@ -145,7 +160,7 @@ final class TagController extends AbstractController
             new OA\Response(response: 404, description: 'Tag non trouvé'),
         ]
     )]
-    #[Route('/tags/{id}', name: 'tag_delete', methods: ['DELETE'])]
+    #[Route('/api/tags/{id}', name: 'api_tag_delete', methods: ['DELETE'])]
     public function deleteTag(int $id, EntityManagerInterface $em): Response
     {
         $tag = $em->getRepository(Tag::class)->find($id);
@@ -158,7 +173,7 @@ final class TagController extends AbstractController
     }
 
     #[OA\Post(
-        path: '/links/{linkId}/tags/{tagId}',
+        path: '/api/links/{linkId}/tags/{tagId}',
         summary: 'Associe un tag existant à un lien existant',
         tags: ['Tags'],
         parameters: [
@@ -170,7 +185,7 @@ final class TagController extends AbstractController
             new OA\Response(response: 404, description: 'Lien ou tag non trouvé'),
         ]
     )]
-    #[Route('/links/{linkId}/tags/{tagId}', name: 'link_add_tag', methods: ['POST'])]
+    #[Route('/api/links/{linkId}/tags/{tagId}', name: 'api_link_add_tag', methods: ['POST'])]
     public function addTagToLink(int $linkId, int $tagId, EntityManagerInterface $em): Response
     {
         $link = $em->getRepository(Link::class)->find($linkId);
@@ -201,7 +216,7 @@ final class TagController extends AbstractController
     }
 
     #[OA\Delete(
-        path: '/links/{linkId}/tags/{tagId}',
+        path: '/api/links/{linkId}/tags/{tagId}',
         summary: 'Dissocie un tag d’un lien',
         tags: ['Tags'],
         parameters: [
@@ -213,7 +228,7 @@ final class TagController extends AbstractController
             new OA\Response(response: 404, description: 'Lien ou tag non trouvé'),
         ]
     )]
-    #[Route('/links/{linkId}/tags/{tagId}', name: 'link_remove_tag', methods: ['DELETE'])]
+    #[Route('/api/links/{linkId}/tags/{tagId}', name: 'api_link_remove_tag', methods: ['DELETE'])]
     public function removeTagFromLink(int $linkId, int $tagId, EntityManagerInterface $em): Response
     {
         $link = $em->getRepository(Link::class)->find($linkId);
@@ -229,7 +244,7 @@ final class TagController extends AbstractController
     }
 
     #[OA\Get(
-        path: '/links/{linkId}/tags',
+        path: '/api/links/{linkId}/tags',
         summary: 'Liste les tags d’un lien',
         tags: ['Tags'],
         parameters: [new OA\Parameter(name: 'linkId', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))],
@@ -238,7 +253,7 @@ final class TagController extends AbstractController
             new OA\Response(response: 404, description: 'Lien non trouvé'),
         ]
     )]
-    #[Route('/links/{linkId}/tags', name: 'link_tags_list', methods: ['GET'])]
+    #[Route('/api/links/{linkId}/tags', name: 'api_link_tags_list', methods: ['GET'])]
     public function listTagsForLink(int $linkId, EntityManagerInterface $em): Response
     {
         $link = $em->getRepository(Link::class)->find($linkId);
