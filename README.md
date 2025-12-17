@@ -39,7 +39,7 @@ Tous les membres du groupe ont contribué de manière équilibrée et proportion
 |---|---|---|
 | Base projet (Symfony 6.4 LTS) + configuration environnement | Mathilde Chauvet (Clouddy23) | `main` |
 | Modèle de données (BDD + entités + migrations) | Filippos K. (filkat34) | `feature/datastructure` |
-| CRUD Link (Entity, Form, Controller, Twig) | Mathieu L. (mathleys) | `feature/crud-link/...` |
+| CRUD Link (Entity, Form, Controller, Twig) | Mathieu L. (mathleys) | `feature/link controller` `feature/tag controller` |
 | UI Twig/CSS (base) | Kamo G. (Spaghette5) | `feature/ui` |
 | (Option) Back office + sécurité | Mathieu L. (mathleys) | `feature/backoffice` |
 | Documentation + captures + PDF (README → PDF) | Filippos K. (filkat34) & Mathilde C. (Clouddy23) | / |
