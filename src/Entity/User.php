@@ -34,8 +34,9 @@ class User implements UserInterface
     #[ORM\Column(type: "string", nullable: false)]
     private string $password;
 
+    // Ajout de la relation OneToMany entre User et Link pour gérer les liens associés à chaque utilisateur
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Link::class, orphanRemoval: true)]
-private Collection $links;
+    private Collection $links;
 
     public function getId(): int // correction getID en int
     {
