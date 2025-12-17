@@ -188,6 +188,7 @@ Nous avons également créé les différentes méthodes CRUD pour du contrôleur
 - Calendrier des releases Symfony : [https://symfony.com/releases](https://symfony.com/releases)
 - Package - Symfony Demo : [https://packagist.org/packages/symfony/demo](https://packagist.org/packages/symfony/demo)
 - Démarrage de Symfony : [https://symfony.com/doc/current/setup.html](https://symfony.com/doc/current/setup.)
+- Installation de Nelmio : [https://symfony.com/bundles/NelmioApiDocBundle/current/index.html#installation](https://symfony.com/bundles/NelmioApiDocBundle/current/index.html#installation)
 
 
 
