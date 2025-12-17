@@ -17,8 +17,10 @@ class Tag implements TagInterface
     #[ORM\Column(type: "integer")]
     private ?int $id = null;
 
+    // Initialisation du nom du tag
     #[ORM\Column(type: "string")]
-    private string $name;
+    private ?string $name = null;
+
 
     // Un tag peut être associé à plusieurs liens
     #[ORM\ManyToMany(targetEntity: Link::class, mappedBy: "tags")]
@@ -34,9 +36,10 @@ class Tag implements TagInterface
         return $this->id;
     }
 
+    // ajout return string pour getName
     public function getName(): string
     {
-        return $this->name;
+        return (string) $this->name;
     }
 
     public function setName(string $name): self
@@ -61,9 +64,15 @@ class Tag implements TagInterface
      */
     public function addLink(Link $link): self
     {
+        // si le lien n'est pas déjà associé à ce tag
         if (!$this->links->contains($link)) {
-            $this->links[] = $link;
-            $link->addTag($this);
+            // alors on l'ajoute
+            $this->links->add($link);
+            // si le tag n'est pas déjà associé au lien
+            if (!$link->getTags()->contains($this)) {
+                // alors on l'ajoute côté lien
+                $link->addTag($this);
+            }
         }
         return $this;
     }
@@ -74,8 +83,13 @@ class Tag implements TagInterface
      */
     public function removeLink(Link $link): self
     {
+        // si le lien est associé à ce tag
         if ($this->links->removeElement($link)) {
-            $link->removeTag($this);
+            // si le tag est associé au lien
+            if ($link->getTags()->contains($this)) {
+                // alors on le retire côté lien
+                $link->removeTag($this);
+            }
         }
         return $this;
     }

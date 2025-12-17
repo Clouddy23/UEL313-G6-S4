@@ -4,6 +4,11 @@ namespace App\Entity;
 
 use App\Entity\Interface\UserInterface;
 use Doctrine\ORM\Mapping as ORM;
+// ajout de l'use de l'entité Link pour la relation entre User et Link
+use App\Entity\Link;
+// ajout des use nécessaires pour les relations,utilisation de Doctrine pour la gestion des listes d'entités (links des utilisateurs)
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity]
 class User implements UserInterface
@@ -28,7 +33,17 @@ class User implements UserInterface
     #[ORM\Column(type: "string", nullable: false)]
     private string $password;
 
-    public function getId(): string
+    // Ajout de la relation OneToMany entre User et Link pour gérer les liens associés à chaque utilisateur
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Link::class, orphanRemoval: true)]
+    private Collection $links;
+
+    // Constructeur pour initialiser la collection de liens pour ajouter des liens à un utilisateur
+    public function __construct()
+    {
+        $this->links = new ArrayCollection();
+    }
+
+    public function getId(): int // correction getID en int
     {
         return $this->id;
     }
