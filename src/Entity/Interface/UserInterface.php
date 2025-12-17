@@ -4,7 +4,7 @@ namespace App\Entity\Interface;
 
 interface UserInterface
 {
-    public function getId(): string;
+    public function getId(): int; // correction ID int
     public function getFirstname(): ?string;
     public function setFirstname(?string $firstname): self;
     public function getLastname(): ?string;
