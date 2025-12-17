@@ -107,6 +107,10 @@ class Link implements LinkInterface
     {
         if (!$this->tags->contains($tag)) {
             $this->tags[] = $tag;
+            // Synchronisation côté inverse
+            if (!$tag->getLinks()->contains($this)) {
+                $tag->addLink($this);
+            }
         }
         return $this;
     }
@@ -117,7 +121,12 @@ class Link implements LinkInterface
      */
     public function removeTag(Tag $tag): self
     {
-        $this->tags->removeElement($tag);
+        if ($this->tags->removeElement($tag)) {
+            // Synchronisation côté inverse
+            if ($tag->getLinks()->contains($this)) {
+                $tag->removeLink($this);
+            }
+        };
         return $this;
     }
 }
