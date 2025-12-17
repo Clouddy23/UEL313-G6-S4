@@ -176,7 +176,7 @@ Nous avons ensuite procédé à des tests de fonctionnement des différentes rou
 Pour se rapprocher du projet Watson, nous avons ajouté une gestion de mots-clés (tags) associables aux liens.
 Un tag peut être relié à plusieurs liens, et un lien pouvant avoir plusieurs tags.
 
-![Nelmio_links](/docs/nelmio_links.png)
+![Nelmio routes tags](/docs/nelmio_tags.png)
 
 ### Création du contrôleur pour les _Tags_
 
@@ -208,6 +208,11 @@ Nous avons ajouté des routes permettant de gérer la relation tag et lien :
 - POST /links/{linkId}/tags/{tagId} : associer un tag existant à un lien
 - DELETE /links/{linkId}/tags/{tagId} : dissocier un tag d’un lien
 - GET /links/{linkId}/tags : lister les tags d’un lien
+
+Nous avons également réaliser une protection contre la création de doublons :
+
+- Lors de la création d’un tag (`POST /tags`) on vérifie qu’un tag du même nom n’existe pas déjà en base
+- Lors de l’association d’un tag à un lien (`POST /links/{linkId}/tags/{tagId}`) une vérification empêche d’ajouter 2 fois le même tag au même lien.
 
 **Tests** <br>
 Pour faciliter les tests, les routes ont été documentées via Nelmio (Swagger UI) et testées à l’aide de requêtes HTTP.
