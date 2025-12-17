@@ -37,7 +37,7 @@ class User implements UserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Link::class, orphanRemoval: true)]
 private Collection $links;
 
-    public function getId(): int 
+    public function getId(): int // correction getID en int
     {
         return $this->id;
     }
