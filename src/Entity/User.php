@@ -10,7 +10,6 @@ use App\Entity\Link;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
-
 #[ORM\Entity]
 class User implements UserInterface
 {
@@ -37,6 +36,12 @@ class User implements UserInterface
     // Ajout de la relation OneToMany entre User et Link pour gérer les liens associés à chaque utilisateur
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Link::class, orphanRemoval: true)]
     private Collection $links;
+
+    // Constructeur pour initialiser la collection de liens pour ajouter des liens à un utilisateur
+    public function __construct()
+    {
+        $this->links = new ArrayCollection();
+    }
 
     public function getId(): int // correction getID en int
     {
@@ -98,13 +103,4 @@ class User implements UserInterface
         $this->password = password_hash($password, PASSWORD_DEFAULT);
         return $this;
     }
-    
 }
-
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Link::class, orphanRemoval: true)]
-private Collection $links;
-    public function __construct()
-    {
-        $this->links = new ArrayCollection();
-    }
-
