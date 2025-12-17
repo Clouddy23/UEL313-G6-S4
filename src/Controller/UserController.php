@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 final class UserController extends AbstractController
 {
     #[OA\Get(
-        path: '/users',
+        path: '/api/users',
         summary: 'Retourne la liste de tous les utilisateurs',
         tags: ['Users'],
         responses: [
@@ -25,6 +25,16 @@ final class UserController extends AbstractController
             )
         ]
     )]
+    #[Route('/api/users', name: 'api_user_list', methods: ['GET'])]
+    public function apiListUsers(EntityManagerInterface $entityManager): Response
+    {
+        $users = $entityManager
+            ->getRepository(User::class)
+            ->findAll();
+        return $this->json(['users' => $users]); // For API test purposes
+    }
+
+    //-- WEB PAGE RENDERING --
     #[Route('/users', name: 'user_list', methods: ['GET'])]
     public function listUsers(EntityManagerInterface $entityManager): Response
     {
@@ -32,12 +42,11 @@ final class UserController extends AbstractController
             ->getRepository(User::class)
             ->findAll();
 
-        //return $this->render('users/list.html.twig', ['users' => $users]); // For web page rendering
-        return $this->json(['users' => $users]); // For API test purposes
+        return $this->render('users/list.html.twig', ['users' => $users]); // For web page rendering
     }
 
     #[OA\Post(
-        path: '/users',
+        path: '/api/users',
         summary: 'Ajoute un nouvel utilisateur',
         tags: ['Users'],
         requestBody: new OA\RequestBody(
@@ -64,7 +73,7 @@ final class UserController extends AbstractController
             )
         ]
     )]
-    #[Route('/users', name: 'user_add', methods: ['POST'])]
+    #[Route('/api/users', name: 'api_user_add', methods: ['POST'])]
     public function addUser(EntityManagerInterface $entityManager, Request $request): Response
     {
         $data = json_decode($request->getContent(), true);
@@ -103,7 +112,7 @@ final class UserController extends AbstractController
     }
 
     #[OA\Put(
-        path: '/users/{id}',
+        path: '/api/users/{id}',
         summary: 'Modifie un utilisateur existant',
         tags: ['Users'],
         parameters: [
@@ -137,7 +146,7 @@ final class UserController extends AbstractController
             )
         ]
     )]
-    #[Route('/users/{id}', name: 'user_update', methods: ['PUT'])]
+    #[Route('/api/users/{id}', name: 'api_user_update', methods: ['PUT'])]
     public function updateUser(
         int $id,
         EntityManagerInterface $entityManager,
@@ -178,7 +187,7 @@ final class UserController extends AbstractController
     }
 
     #[OA\Delete(
-        path: '/users/{id}',
+        path: '/api/users/{id}',
         summary: 'Supprime un utilisateur',
         tags: ['Users'],
         parameters: [
@@ -200,7 +209,7 @@ final class UserController extends AbstractController
             )
         ]
     )]
-    #[Route('/users/{id}', name: 'user_delete', methods: ['DELETE'])]
+    #[Route('/api/users/{id}', name: 'api_user_delete', methods: ['DELETE'])]
     public function deleteUser(
         int $id,
         EntityManagerInterface $entityManager

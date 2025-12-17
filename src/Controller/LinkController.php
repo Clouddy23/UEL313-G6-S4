@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 final class LinkController extends AbstractController
 {
     #[OA\Get(
-        path: '/links',
+        path: '/api/links',
         summary: 'Retourne la liste de tous les liens',
         tags: ['Links'],
         responses: [
@@ -27,12 +27,13 @@ final class LinkController extends AbstractController
             )
         ]
     )]
-    #[Route('/links', name: 'link_list', methods: ['GET'])]
-    public function listLinks(EntityManagerInterface $entityManager): Response
+    #[Route('/api/links', name: 'api_link_list', methods: ['GET'])]
+    public function apiListLinks(EntityManagerInterface $entityManager): Response
     {
-        $links = $entityManager
-            ->getRepository(Link::class)
-            ->findAll();
+        //Requete DQL pour récupérer les liens avec leurs tags et utilisateurs associés
+        $dql = "SELECT l, t FROM App\Entity\Link l LEFT JOIN l.tags t";
+        $query = $entityManager->createQuery($dql);
+        $links = $query->getResult();
 
         $data = array_map(function (Link $link) {
             return [
@@ -41,15 +42,32 @@ final class LinkController extends AbstractController
                 'title' => $link->getTitle(),
                 'desc' => $link->getDesc(),
                 'user_id' => $link->getUser()->getId(),
+                'tags' => array_map(function ($tag) {
+                    return [
+                        'id' => $tag->getId(),
+                        'name' => $tag->getName()
+                    ];
+                }, $link->getTags()->toArray())
             ];
         }, $links);
 
-        //return $this->render('links/list.html.twig', ['links' => $links]); // For web page rendering
-        return $this->json(['links' => $data]); // For API test purposes
+        return $this->json(['links' => $data]);
+    }
+
+    //-- WEB PAGE RENDERING --
+    #[Route('/links', name: 'link_list', methods: ['GET'])]
+    public function listLinks(EntityManagerInterface $entityManager): Response
+    {
+        //Requete DQL pour récupérer les liens avec leurs tags et utilisateurs associés
+        $dql = "SELECT l, t, u FROM App\Entity\Link l LEFT JOIN l.tags t LEFT JOIN l.user u";
+        $query = $entityManager->createQuery($dql);
+        $links = $query->getResult();
+
+        return $this->render('index.html.twig', ['links' => $links]);
     }
 
     #[OA\Post(
-        path: '/links',
+        path: '/api/links',
         summary: 'Ajoute un nouveau lien',
         tags: ['Links'],
         requestBody: new OA\RequestBody(
@@ -79,7 +97,7 @@ final class LinkController extends AbstractController
             )
         ]
     )]
-    #[Route('/links', name: 'link_add', methods: ['POST'])]
+    #[Route('/api/links', name: 'api_link_add', methods: ['POST'])]
     public function createLink(EntityManagerInterface $entityManager, Request $request): Response
     {
         $data = json_decode($request->getContent(), true);
@@ -114,7 +132,7 @@ final class LinkController extends AbstractController
     }
 
     #[OA\Put(
-        path: '/links/{id}',
+        path: '/api/links/{id}',
         summary: 'Modifie un lien existant',
         tags: ['Links'],
         parameters: [
@@ -147,7 +165,7 @@ final class LinkController extends AbstractController
             )
         ]
     )]
-    #[Route('/links/{id}', name: 'link_update', methods: ['PUT'])]
+    #[Route('/api/links/{id}', name: 'api_link_update', methods: ['PUT'])]
     public function updateLink(
         int $id,
         EntityManagerInterface $entityManager,
@@ -189,7 +207,7 @@ final class LinkController extends AbstractController
     }
 
     #[OA\Delete(
-        path: '/links/{id}',
+        path: '/api/links/{id}',
         summary: 'Supprime un lien',
         tags: ['Links'],
         parameters: [
@@ -211,7 +229,7 @@ final class LinkController extends AbstractController
             )
         ]
     )]
-    #[Route('/links/{id}', name: 'link_delete', methods: ['DELETE'])]
+    #[Route('/api/links/{id}', name: 'api_link_delete', methods: ['DELETE'])]
     public function deleteLink(
         int $id,
         EntityManagerInterface $entityManager
