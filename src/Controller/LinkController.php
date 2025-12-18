@@ -8,9 +8,8 @@ use Symfony\Component\Routing\Attribute\Route;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\User;
 use App\Entity\Link;
+use App\Repository\LinkRepository;
 
-
-use Nelmio\ApiDocBundle\Attribute\Security; // A utiliser si des routes nécessitent une authentification (si on a le temps de mettre cela en place...)
 use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -28,40 +27,39 @@ final class LinkController extends AbstractController
         ]
     )]
     #[Route('/api/links', name: 'api_link_list', methods: ['GET'])]
-    public function apiListLinks(EntityManagerInterface $entityManager): Response
+    public function apiListLinks(LinkRepository $linkRepository): Response
     {
-        //Requete DQL pour récupérer les liens avec leurs tags et utilisateurs associés
-        $dql = "SELECT l, t FROM App\Entity\Link l LEFT JOIN l.tags t";
-        $query = $entityManager->createQuery($dql);
-        $links = $query->getResult();
+        // Using repository method to get links with tags and users
+        $links = $linkRepository->findAllWithTagsAndUsers();
 
-        $data = array_map(function (Link $link) {
-            return [
-                'id' => $link->getId(),
-                'url' => $link->getUrl(),
-                'title' => $link->getTitle(),
-                'desc' => $link->getDesc(),
-                'user_id' => $link->getUser()->getId(),
-                'tags' => array_map(function ($tag) {
-                    return [
-                        'id' => $tag->getId(),
-                        'name' => $tag->getName()
-                    ];
-                }, $link->getTags()->toArray())
-            ];
-        }, $links);
+        $data = [];
+        if (!empty($links)) {
+            $data = array_map(function (Link $link) {
+                return [
+                    'id' => $link->getId(),
+                    'url' => $link->getUrl(),
+                    'title' => $link->getTitle(),
+                    'desc' => $link->getDesc(),
+                    'user_id' => $link->getUser() ? $link->getUser()->getId() : null,
+                    'tags' => array_map(function ($tag) {
+                        return [
+                            'id' => $tag->getId(),
+                            'name' => $tag->getName()
+                        ];
+                    }, $link->getTags()->toArray())
+                ];
+            }, $links);
+        }
 
         return $this->json(['links' => $data]);
     }
 
     //-- WEB PAGE RENDERING --
     #[Route('/links', name: 'link_list', methods: ['GET'])]
-    public function listLinks(EntityManagerInterface $entityManager): Response
+    public function listLinks(LinkRepository $linkRepository): Response
     {
-        //Requete DQL pour récupérer les liens avec leurs tags et utilisateurs associés
-       $dql = "SELECT l FROM App\\Entity\\Link l LEFT JOIN l.tags t LEFT JOIN l.user u";
-       $query = $entityManager->createQuery($dql);
-       $links = $query->getResult();
+        // Using repository method to get links with tags and users
+        $links = $linkRepository->findAllWithTagsAndUsers();
 
         return $this->render('index.html.twig', ['links' => $links]);
     }

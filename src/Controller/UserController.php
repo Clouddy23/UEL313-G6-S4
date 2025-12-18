@@ -8,7 +8,6 @@ use Symfony\Component\Routing\Attribute\Route;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\User;
 
-use Nelmio\ApiDocBundle\Attribute\Security; // A utiliser si des routes nécessitent une authentification (si on a le temps de mettre cela en place...)
 use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -31,7 +30,7 @@ final class UserController extends AbstractController
         $users = $entityManager
             ->getRepository(User::class)
             ->findAll();
-        return $this->json(['users' => $users]); // For API test purposes
+        return $this->json(['users' => $users]);
     }
 
     //-- WEB PAGE RENDERING --
@@ -42,7 +41,7 @@ final class UserController extends AbstractController
             ->getRepository(User::class)
             ->findAll();
 
-        return $this->render('users/list.html.twig', ['users' => $users]); // For web page rendering
+        return $this->render('users/list.html.twig', ['users' => $users]);
     }
 
     #[OA\Post(

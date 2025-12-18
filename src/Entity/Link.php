@@ -3,11 +3,12 @@
 namespace App\Entity;
 
 use App\Entity\Interface\LinkInterface;
+use App\Repository\LinkRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: LinkRepository::class)]
 #[ORM\Table(name: "link")]
 class Link implements LinkInterface
 {

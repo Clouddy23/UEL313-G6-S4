@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -32,6 +34,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\Column]
     private ?string $password = null;
+
+    /**
+     * @var Collection<int, Link>
+     */
+    #[ORM\OneToMany(targetEntity: Link::class, mappedBy: "user")]
+    private Collection $links;
+
+    public function __construct()
+    {
+        $this->links = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -101,5 +114,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function eraseCredentials(): void
     {
         // @deprecated, to be removed when upgrading to Symfony 8
+    }
+
+    /**
+     * @return Collection<int, Link>
+     */
+    public function getLinks(): Collection
+    {
+        return $this->links;
+    }
+
+    public function addLink(Link $link): static
+    {
+        if (!$this->links->contains($link)) {
+            $this->links->add($link);
+            $link->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLink(Link $link): static
+    {
+        if ($this->links->removeElement($link)) {
+            // set the owning side to null (unless already changed)
+            if ($link->getUser() === $this) {
+                // Note: You may need to make User nullable in Link entity for this to work
+                // $link->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }
