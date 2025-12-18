@@ -52,13 +52,11 @@ final class UserController extends AbstractController
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
-                required: ['login', 'password'],
+                required: ['username', 'password'],
                 properties: [
-                    new OA\Property(property: 'login', type: 'string'),
+                    new OA\Property(property: 'username', type: 'string'),
                     new OA\Property(property: 'password', type: 'string'),
-                    new OA\Property(property: 'firstname', type: 'string'),
-                    new OA\Property(property: 'lastname', type: 'string'),
-                    new OA\Property(property: 'administrator', type: 'boolean'),
+                    new OA\Property(property: 'roles', type: 'array', items: new OA\Items(type: 'string')),
                 ]
             )
         ),
@@ -77,26 +75,20 @@ final class UserController extends AbstractController
     public function addUser(EntityManagerInterface $entityManager, Request $request): Response
     {
         $data = json_decode($request->getContent(), true);
-        if (!isset($data['login'], $data['password'])) {
-            return $this->json(['error' => 'login and password are required'], 400);
+        if (!isset($data['username'], $data['password'])) {
+            return $this->json(['error' => 'username and password are required'], 400);
         }
 
-        $existing = $entityManager->getRepository(User::class)->findOneBy(['login' => $data['login']]);
+        $existing = $entityManager->getRepository(User::class)->findOneBy(['username' => $data['username']]);
         if ($existing) {
-            return $this->json(['error' => 'login already exists'], 400);
+            return $this->json(['error' => 'username already exists'], 400);
         }
 
         $user = new User();
-        $user->setLogin($data['login']);
-        $user->setPassword($data['password']); // Password is hashed in the setter
-        if (isset($data['firstname'])) {
-            $user->setFirstname($data['firstname']);
-        }
-        if (isset($data['lastname'])) {
-            $user->setLastname($data['lastname']);
-        }
-        if (isset($data['administrator'])) {
-            $user->setAdministrator((bool)$data['administrator']);
+        $user->setUsername($data['username']);
+        $user->setPassword($data['password']); // Password should be hashed
+        if (isset($data['roles']) && is_array($data['roles'])) {
+            $user->setRoles($data['roles']);
         }
 
         $entityManager->persist($user);
@@ -104,10 +96,8 @@ final class UserController extends AbstractController
 
         return $this->json([
             'id' => $user->getId(),
-            'login' => $user->getLogin(),
-            'firstname' => $user->getFirstname(),
-            'lastname' => $user->getLastname(),
-            'administrator' => $user->isAdministrator(),
+            'username' => $user->getUsername(),
+            'roles' => $user->getRoles(),
         ], 201);
     }
 
@@ -127,11 +117,9 @@ final class UserController extends AbstractController
             required: true,
             content: new OA\JsonContent(
                 properties: [
-                    new OA\Property(property: 'login', type: 'string'),
+                    new OA\Property(property: 'username', type: 'string'),
                     new OA\Property(property: 'password', type: 'string'),
-                    new OA\Property(property: 'firstname', type: 'string'),
-                    new OA\Property(property: 'lastname', type: 'string'),
-                    new OA\Property(property: 'administrator', type: 'boolean'),
+                    new OA\Property(property: 'roles', type: 'array', items: new OA\Items(type: 'string')),
                 ]
             )
         ),
@@ -159,30 +147,22 @@ final class UserController extends AbstractController
 
         $data = json_decode($request->getContent(), true);
 
-        if (isset($data['login'])) {
-            $user->setLogin($data['login']);
+        if (isset($data['username'])) {
+            $user->setUsername($data['username']);
         }
         if (isset($data['password'])) {
             $user->setPassword($data['password']);
         }
-        if (isset($data['firstname'])) {
-            $user->setFirstname($data['firstname']);
-        }
-        if (isset($data['lastname'])) {
-            $user->setLastname($data['lastname']);
-        }
-        if (isset($data['administrator'])) {
-            $user->setAdministrator((bool)$data['administrator']);
+        if (isset($data['roles']) && is_array($data['roles'])) {
+            $user->setRoles($data['roles']);
         }
 
         $entityManager->flush();
 
         return $this->json([
             'id' => $user->getId(),
-            'login' => $user->getLogin(),
-            'firstname' => $user->getFirstname(),
-            'lastname' => $user->getLastname(),
-            'administrator' => $user->isAdministrator(),
+            'username' => $user->getUsername(),
+            'roles' => $user->getRoles(),
         ]);
     }
 
