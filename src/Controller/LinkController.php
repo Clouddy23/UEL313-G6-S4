@@ -59,9 +59,9 @@ final class LinkController extends AbstractController
     public function listLinks(EntityManagerInterface $entityManager): Response
     {
         //Requete DQL pour récupérer les liens avec leurs tags et utilisateurs associés
-        $dql = "SELECT l, t, u FROM App\Entity\Link l LEFT JOIN l.tags t LEFT JOIN l.user u";
-        $query = $entityManager->createQuery($dql);
-        $links = $query->getResult();
+       $dql = "SELECT l FROM App\\Entity\\Link l LEFT JOIN l.tags t LEFT JOIN l.user u";
+       $query = $entityManager->createQuery($dql);
+       $links = $query->getResult();
 
         return $this->render('index.html.twig', ['links' => $links]);
     }

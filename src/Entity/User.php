@@ -2,105 +2,104 @@
 
 namespace App\Entity;
 
-use App\Entity\Interface\UserInterface;
+use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
-// ajout de l'use de l'entité Link pour la relation entre User et Link
-use App\Entity\Link;
-// ajout des use nécessaires pour les relations,utilisation de Doctrine pour la gestion des listes d'entités (links des utilisateurs)
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
-#[ORM\Entity]
-class User implements UserInterface
+#[ORM\Entity(repositoryClass: UserRepository::class)]
+#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_USERNAME', fields: ['username'])]
+#[UniqueEntity(fields: ['username'], message: 'There is already an account with this username')]
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: "integer")]
+    #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: "string", nullable: true)]
-    private ?string $firstname = null;
+    #[ORM\Column(length: 180)]
+    private ?string $username = null;
 
-    #[ORM\Column(type: "string", nullable: true)]
-    private ?string $lastname = null;
+    /**
+     * @var list<string> The user roles
+     */
+    #[ORM\Column]
+    private array $roles = [];
 
-    #[ORM\Column(type: "string", unique: true, nullable: false)]
-    private string $login;
+    /**
+     * @var string The hashed password
+     */
+    #[ORM\Column]
+    private ?string $password = null;
 
-    #[ORM\Column(type: "boolean", options: ["default" => false])]
-    private bool $administrator = false;
-
-    #[ORM\Column(type: "string", nullable: false)]
-    private string $password;
-
-    // Ajout de la relation OneToMany entre User et Link pour gérer les liens associés à chaque utilisateur
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Link::class, orphanRemoval: true)]
-    private Collection $links;
-
-    // Constructeur pour initialiser la collection de liens pour ajouter des liens à un utilisateur
-    public function __construct()
-    {
-        $this->links = new ArrayCollection();
-    }
-
-    public function getId(): int // correction getID en int
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getFirstname(): ?string
+    public function getUsername(): ?string
     {
-        return $this->firstname;
+        return $this->username;
     }
 
-    public function setFirstname(?string $firstname): self
+    public function setUsername(string $username): static
     {
-        $this->firstname = $firstname;
+        $this->username = $username;
+
         return $this;
     }
 
-    public function getLastname(): ?string
+    /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUserIdentifier(): string
     {
-        return $this->lastname;
+        return (string) $this->username;
     }
 
-    public function setLastname(?string $lastname): self
+    /**
+     * @see UserInterface
+     */
+    public function getRoles(): array
     {
-        $this->lastname = $lastname;
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    /**
+     * @param list<string> $roles
+     */
+    public function setRoles(array $roles): static
+    {
+        $this->roles = $roles;
+
         return $this;
     }
 
-    public function getLogin(): string
-    {
-        return $this->login;
-    }
-
-    public function setLogin(string $login): self
-    {
-        $this->login = $login;
-        return $this;
-    }
-
-    public function isAdministrator(): bool
-    {
-        return $this->administrator;
-    }
-
-    public function setAdministrator(bool $administrator): self
-    {
-        $this->administrator = $administrator;
-        return $this;
-    }
-
-    public function getPassword(): string
+    /**
+     * @see PasswordAuthenticatedUserInterface
+     */
+    public function getPassword(): ?string
     {
         return $this->password;
     }
 
-    public function setPassword(string $password): self
+    public function setPassword(string $password): static
     {
-        // Hachage du mot de passe avant de le stocker
-        $this->password = password_hash($password, PASSWORD_DEFAULT);
+        $this->password = $password;
+
         return $this;
+    }
+
+    #[\Deprecated]
+    public function eraseCredentials(): void
+    {
+        // @deprecated, to be removed when upgrading to Symfony 8
     }
 }

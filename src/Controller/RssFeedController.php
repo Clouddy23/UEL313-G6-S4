@@ -14,12 +14,13 @@ use Symfony\Component\HttpFoundation\Request;
 
 class RssFeedController extends AbstractController
 {
+    //WEB ROUTE - RSS Feed des 15 derniers liens ajoutés
     #[Route('/feed', name: 'rss_feed', methods: ['GET'])]
     public function rssFeed(EntityManagerInterface $entityManager, Request $request): Response
     {
         try {
             // Récupérer les 15 derniers liens ajoutés (ordonnés par ID décroissant)
-            $dql = "SELECT l, u FROM App\Entity\Link l LEFT JOIN l.user u ORDER BY l.id DESC";
+            $dql = "SELECT l FROM App\\Entity\\Link l LEFT JOIN l.user u ORDER BY l.id DESC";
             $query = $entityManager->createQuery($dql);
             $query->setMaxResults(15);
             $links = $query->getResult();
@@ -39,7 +40,7 @@ class RssFeedController extends AbstractController
                 $rss .= '      <link>' . htmlspecialchars($link->getUrl()) . '</link>' . "\n";
                 $rss .= '      <description>' . htmlspecialchars($link->getDesc() ?: 'Aucune description') . '</description>' . "\n";
                 if ($link->getUser()) {
-                    $rss .= '      <author>' . htmlspecialchars($link->getUser()->getLogin()) . '</author>' . "\n";
+                    $rss .= '      <author>' . htmlspecialchars($link->getUser()->getUsername()) . '</author>' . "\n";
                 }
                 $rss .= '    </item>' . "\n";
             }
