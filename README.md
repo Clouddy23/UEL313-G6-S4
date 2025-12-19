@@ -139,7 +139,7 @@ Se rendre à l'URL indiquée par le serveur : <http://127.0.0.1:8000>
 - Modification du fichier _.env_ en renseignant l'URL correct de la base de données : `DATABASE_URL="sqlite:///%kernel.project_dir%/var/watson.db"`
 - Modification du fichier _.gitignore_ pour exclure le fichier _watson.db_ afin qu'il puisse être partagé avec les collaborateurs.
 
-## Base et manipulation de données
+## Base de données
 
 ### Le Modèle
 
@@ -233,7 +233,7 @@ L'interface de _Nelmio_, nous a servi pour tester l'API et nous assurer que tout
 
 La création de cette API a été ambitieuse et seulement une petite partie de ses méthodes a été reprise pour l'implémentation des routes publiques. Cependant elle pourra éventuellement servir dans la maintenance évolutive de l'application, si elle est appelée à évoluer.
 
-## Architecture hybride : SSR vs API REST
+## Architectures : SSR vs API REST
 
 Dans son état actuel notre projet a une architecture hybride. Il a commencé, à des fins de test, comme un projet API REST comme on pourrait en trouver dans la plupart des frameworks _nodeJS_ : on a créé des endpoints API (dans LinkController, UserController, TagsController) accessibles par des requêtes HTTP et qui ne srvent qu'à la transmission pure d'informations entre le serveur et des clients sous format JSON.
 
