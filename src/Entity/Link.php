@@ -3,11 +3,12 @@
 namespace App\Entity;
 
 use App\Entity\Interface\LinkInterface;
+use App\Repository\LinkRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: LinkRepository::class)]
 #[ORM\Table(name: "link")]
 class Link implements LinkInterface
 {
@@ -25,6 +26,9 @@ class Link implements LinkInterface
     #[ORM\Column(type: "string")]
     private string $desc;
 
+    #[ORM\Column(type: "datetime")]
+    private \DateTime $createdAt;
+
     // Chaque lien est associé à un utilisateur
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: "links")]
     #[ORM\JoinColumn(nullable: false)]
@@ -38,6 +42,7 @@ class Link implements LinkInterface
     public function __construct()
     {
         $this->tags = new ArrayCollection();
+        $this->createdAt = new \DateTime();
     }
 
     public function getId(): ?int
@@ -75,6 +80,17 @@ class Link implements LinkInterface
     public function setDesc(string $desc): self
     {
         $this->desc = $desc;
+        return $this;
+    }
+
+    public function getCreatedAt(): \DateTime
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTime $createdAt): self
+    {
+        $this->createdAt = $createdAt;
         return $this;
     }
 

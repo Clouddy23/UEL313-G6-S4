@@ -21,6 +21,8 @@ class Tag implements TagInterface
     #[ORM\Column(type: "string")]
     private ?string $name = null;
 
+    #[ORM\Column(type: "datetime")]
+    private \DateTime $createdAt;
 
     // Un tag peut être associé à plusieurs liens
     #[ORM\ManyToMany(targetEntity: Link::class, mappedBy: "tags")]
@@ -29,6 +31,7 @@ class Tag implements TagInterface
     public function __construct()
     {
         $this->links = new ArrayCollection();
+        $this->createdAt = new \DateTime();
     }
 
     public function getId(): ?int
@@ -45,6 +48,17 @@ class Tag implements TagInterface
     public function setName(string $name): self
     {
         $this->name = $name;
+        return $this;
+    }
+
+    public function getCreatedAt(): \DateTime
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTime $createdAt): self
+    {
+        $this->createdAt = $createdAt;
         return $this;
     }
 
