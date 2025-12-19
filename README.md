@@ -1,25 +1,22 @@
-# UEL313-G6-S4
+# UEL313-G6-S4 : projet de groupe Symfony
 
-**Projet universitaire Symfony 6.4 (LTS) en groupe** : application de gestion de liens stockés en base de données (CRUD : listing, ajout, modification, suppression).
-
-**Dépôt public** : le projet est hébergé sur Github [https://github.com/Clouddy23/UEL313-G6-S4/](https://github.com/Clouddy23/UEL313-G6-S4/)
+_WATSON_ est une application de gestion et de mutualisation de liens. Son code source est disponible sur [https://github.com/Clouddy23/UEL313-G6-S4/](https://github.com/Clouddy23/UEL313-G6-S4/)
 
 ## Objectifs
 
 - [x] Prise en main du cadriciel Symfony 6.4 (LTS)
 - [x] Développement d'une API
 - [x] Création de templates TWIG
-- [x] Création d'une UI moderne
-- [x] Développement de diverses fonctionnalités
-  - **Lister** les liens
-  - **Ajouter** un lien via formulaire (**titre**, **URL**, **descriptif**)
-  - **Mettre à jour** un lien
-  - **Supprimer** un lien
-- [x] Approcher davantage le projet “Watson” en ajoutant :
-  - Des **mots-clés** associés aux liens
-  - Un **back office** sécurisé
-  - Une **gestion d’utilisateurs**
-  - Un rendu **Twig/CSS** de base
+- [x] Fonctionnalités MVP :
+  - [x] listing de liens stockés en base de données ;
+  - [x] ajout de lien en base de donnés à partir d'un formulaire, un lien étant composé au minimum d'un titre et d'une URL et d'un descriptif ;
+  - [x] mise à jour des liens stockés en base de données
+  - [x] suppression de liens en base de données
+- [x] Fonctionnalités supplémentaires
+  - [x] proposer une gestion de mots clés à associer à un lien;
+  - [x] permettre un espace "back office" avec accès restreint pour gérer les liens;
+  - [x] permettre la gestion d'utilisateurs pour le "back office";
+  - [x] proposer un rendu Twig/CSS de base.
 
 ## Principe général de collaboration
 
@@ -39,7 +36,7 @@ Tous les membres du groupe ont contribué de manière équilibrée et proportion
 | Activité                                                    | Responsable(s)       |
 | ----------------------------------------------------------- | -------------------- |
 | Initialisation et configuration de l'environnement dev      | Mathilde             |
-| Modèle de données (entités, repositories, migrations)       | Filippos             |
+| Modèle et manipulation des données                          | Filippos             |
 | API Users, authentification, inscription                    | Filippos             |
 | API Liens                                                   | Mathieu              |
 | API Tags                                                    | Mathilde             |
@@ -234,6 +231,8 @@ L'interface de _Nelmio_, nous a servi pour tester l'API et nous assurer que tout
 
 ![Nelmio exemple test](/docs/test_getlinks.png)
 
+La création de cette API a été ambitieuse et seulement une petite partie de ses méthodes a été reprise pour l'implémentation des routes publiques. Cependant elle pourra éventuellement servir dans la maintenance évolutive de l'application, si elle est appelée à évoluer.
+
 ## Implémentation des routes Web
 
 Après avoir testé le bon fonctionnement de toutes les routes de l'API, nous avons implémenté les deux contrôleurs qui serviront à afficher les pages de l'application :
@@ -260,7 +259,17 @@ Nous avons mis en place un système d'authentification et d'inscription en suiva
 
 ## Front-end
 
-### Création des templates TWIG
+### Templates TWIG
+
+Les templates `base.html.twig`, `login.html.twig` et `register.html.twig` ont été générés automatiquement par _Symfony_ pour le premier lors de la création du projet et, pour les deux autres, lors de l'installation du _SecurityBundle_.
+
+Le template `base.html.twig` comporte la mise en page générale du site avec la navbar et le footer : tous les autres templates en dépendent.
+
+Nous avons créer deux templates supplémentaires:
+
+- `index.html.twig` qui constitue la page d'accueil du site permettant de visualiser l'ensemble des liens et offrant un champ de recherche ;
+
+- `templates\backoffice.html.twig` qui constitue la page du backoffice fonctionnant grâce à deux modales (et le script javascript nécessaire pour leur gestion) pour l'affichage et la gestion des utilisateurs et des liens.
 
 ### Stylage et responsivité
 
