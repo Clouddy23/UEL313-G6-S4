@@ -387,14 +387,22 @@ var editRoleAdmin = document.getElementById('editRoleAdmin');
 if (editUsername) 
 editUsername.value = '';
 
+
+
 if (editPassword) 
 editPassword.value = '';
+
+
 
 if (editRoleUser) 
 editRoleUser.checked = false;
 
+
+
 if (editRoleAdmin) 
 editRoleAdmin.checked = false;
+
+
 
 }
 
@@ -407,14 +415,21 @@ var editNewTag = document.getElementById('editNewTag');
 if (editLinkTitle) 
 editLinkTitle.value = '';
 
+
+
 if (editLinkUrl) 
 editLinkUrl.value = '';
+
+
 
 if (editLinkDesc) 
 editLinkDesc.value = '';
 
+
+
 if (editNewTag) 
 editNewTag.value = '';
+
 
 
 // Clear all tag checkboxes
@@ -479,20 +494,33 @@ var roles = JSON.parse(trigger.getAttribute('data-user-roles') || '["ROLE_USER"]
 
 console.log('User data:', {userId, username, roles});
 
-// Populate form after modal is shown
-setTimeout(function () {
+// Store data and populate when modal is visible
+var populateUserForm = function () {
+var modal = document.getElementById('editUserModal');
+if (! modal || modal.style.display === 'none') {
+setTimeout(populateUserForm, 50);
+return;
+}
+
 var editUserForm = document.getElementById('editUserForm');
 var editUsername = document.getElementById('editUsername');
 var editPassword = document.getElementById('editPassword');
 var editRoleUser = document.getElementById('editRoleUser');
 var editRoleAdmin = document.getElementById('editRoleAdmin');
 
+console.log('Elements found:', {
+form: !! editUserForm,
+username: !! editUsername,
+password: !! editPassword,
+roleUser: !! editRoleUser,
+roleAdmin: !! editRoleAdmin
+});
+
 if (editUserForm && userId) {
 editUserForm.action = '{{ path('app_user_edit', {id: '__ID__'}) }}'.replace('__ID__', userId);
 }
 if (editUsername) {
 editUsername.value = username || '';
-console.log('Set username:', username);
 }
 if (editPassword) {
 editPassword.value = '';
@@ -503,7 +531,9 @@ editRoleUser.checked = roles.includes('ROLE_USER');
 if (editRoleAdmin) {
 editRoleAdmin.checked = roles.includes('ROLE_ADMIN');
 }
-}, 50);
+};
+
+setTimeout(populateUserForm, 100);
 }
 
 // Handle edit link modal data
@@ -522,28 +552,39 @@ desc,
 linkTags
 });
 
-// Populate form after modal is shown
-setTimeout(function () {
+// Store data and populate when modal is visible
+var populateLinkForm = function () {
+var modal = document.getElementById('editLinkModal');
+if (! modal || modal.style.display === 'none') {
+setTimeout(populateLinkForm, 50);
+return;
+}
+
 var editLinkForm = document.getElementById('editLinkForm');
 var editLinkTitle = document.getElementById('editLinkTitle');
 var editLinkUrl = document.getElementById('editLinkUrl');
 var editLinkDesc = document.getElementById('editLinkDesc');
 var editNewTag = document.getElementById('editNewTag');
 
+console.log('Elements found:', {
+form: !! editLinkForm,
+title: !! editLinkTitle,
+url: !! editLinkUrl,
+desc: !! editLinkDesc,
+newTag: !! editNewTag
+});
+
 if (editLinkForm && linkId) {
 editLinkForm.action = '{{ path('app_link_edit', {id: '__ID__'}) }}'.replace('__ID__', linkId);
 }
 if (editLinkTitle) {
 editLinkTitle.value = title || '';
-console.log('Set title:', title);
 }
 if (editLinkUrl) {
 editLinkUrl.value = url || '';
-console.log('Set url:', url);
 }
 if (editLinkDesc) {
 editLinkDesc.value = desc || '';
-console.log('Set desc:', desc);
 }
 
 // Clear all checkboxes first
@@ -557,6 +598,8 @@ var checkbox = document.getElementById('editTag' + tagId);
 if (checkbox) {
 checkbox.checked = true;
 console.log('Checked tag:', tagId);
+} else {
+console.log('Tag checkbox not found:', tagId);
 }
 });
 
@@ -564,7 +607,9 @@ console.log('Checked tag:', tagId);
 if (editNewTag) {
 editNewTag.value = '';
 }
-}, 50);
+};
+
+setTimeout(populateLinkForm, 100);
 }
 
 showModal(modalId);
