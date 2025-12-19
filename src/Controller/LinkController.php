@@ -19,10 +19,15 @@ final class LinkController extends AbstractController
         path: '/api/links',
         summary: 'Retourne la liste de tous les liens',
         tags: ['Links'],
+        security: [['BasicAuth' => []]],
         responses: [
             new OA\Response(
                 response: 200,
                 description: 'Retourne la liste de tous les liens',
+            ),
+            new OA\Response(
+                response: 401,
+                description: 'Authentification requise',
             )
         ]
     )]
@@ -68,6 +73,7 @@ final class LinkController extends AbstractController
         path: '/api/links',
         summary: 'Ajoute un nouveau lien',
         tags: ['Links'],
+        security: [['BasicAuth' => []]],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
@@ -88,6 +94,10 @@ final class LinkController extends AbstractController
             new OA\Response(
                 response: 400,
                 description: 'Données invalides'
+            ),
+            new OA\Response(
+                response: 401,
+                description: 'Authentification requise',
             ),
             new OA\Response(
                 response: 404,

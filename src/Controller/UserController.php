@@ -17,10 +17,15 @@ final class UserController extends AbstractController
         path: '/api/users',
         summary: 'Retourne la liste de tous les utilisateurs',
         tags: ['Users'],
+        security: [['BasicAuth' => []]],
         responses: [
             new OA\Response(
                 response: 200,
                 description: 'Retourne la liste de tous les utilisateurs',
+            ),
+            new OA\Response(
+                response: 401,
+                description: 'Authentification requise',
             )
         ]
     )]

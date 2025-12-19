@@ -4,6 +4,14 @@ nelmio_api_doc:
       title: Watson
       description: Une application de gestion de liens.
       version: 1.0.0
+    security:
+      - BasicAuth: []
+    components:
+      securitySchemes:
+        BasicAuth:
+          type: http
+          scheme: basic
+          description: "Authentification par nom d'utilisateur et mot de passe"
   areas: # to filter documented areas
     path_patterns:
       - ^/api(?!/doc$) # Accepts routes under /api except /api/doc
