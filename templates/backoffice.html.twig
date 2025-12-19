@@ -1,0 +1,590 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Backoffice - Administration
+{% endblock %}
+
+{% block body %}
+	<div class="backoffice-container">
+		<div class="page-header">
+			<h1>Backoffice</h1>
+			<p>Administration des utilisateurs et des liens</p>
+		</div>
+
+		<!-- Flash Messages -->
+		{% for type, messages in app.flashes %}
+			{% for message in messages %}
+				<div class="alert alert-{{ type == 'error' ? 'danger' : type }} alert-dismissible fade show" role="alert">
+					{{ message }}
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>
+			{% endfor %}
+		{% endfor %}
+
+		<!-- Onglets -->
+		<div class="tabs-container">
+			<div class="tabs-nav">
+				{% if is_granted('ROLE_ADMIN') %}
+					<a href="{{ path('app_backoffice', {tab: 'users'}) }}" class="tab-button {{ activeTab == 'users' ? 'active' : '' }}">
+						<i class="bi bi-people"></i>
+						Utilisateurs ({{ users|length }})
+					</a>
+				{% endif %}
+				<a href="{{ path('app_backoffice', {tab: 'links'}) }}" class="tab-button {{ activeTab == 'links' ? 'active' : '' }}">
+					<i class="bi bi-link-45deg"></i>
+					Liens ({{ links|length }})
+				</a>
+			</div>
+
+			<!-- Contenu des onglets -->
+			<div
+				class="tabs-content">
+				<!-- Onglet Utilisateurs -->
+				{% if is_granted('ROLE_ADMIN') and activeTab == 'users' %}
+					<div class="tab-panel active" id="users-tab">
+						<div class="tab-header">
+							<div class="tab-actions">
+								<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">
+									<i class="bi bi-plus"></i>
+									Ajouter un utilisateur
+								</button>
+							</div>
+						</div>
+
+						{% if users|length > 0 %}
+							<div class="data-table">
+								<table>
+									<thead>
+										<tr>
+											<th>ID</th>
+											<th>Nom d'utilisateur</th>
+											<th>Rôles</th>
+											<th>Nombre de liens</th>
+											<th>Actions</th>
+										</tr>
+									</thead>
+									<tbody>
+										{% for user in users %}
+											<tr>
+												<td>{{ user.id }}</td>
+												<td>{{ user.username }}</td>
+												<td>
+													{% for role in user.roles %}
+														<span class="badge bg-primary">{{ role }}</span>
+													{% endfor %}
+												</td>
+												<td>{{ user.links|length }}</td>
+												<td>
+													<div class="action-buttons">
+														<button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editUserModal" data-user-id="{{ user.id }}" data-user-username="{{ user.username|e('html_attr') }}" data-user-roles="{{ user.roles|json_encode|e('html_attr') }}">Éditer</button>
+														<form method="post" action="{{ path('app_user_delete', {id: user.id}) }}" style="display: inline;">
+															<input type="hidden" name="_token" value="{{ csrf_token('delete-user-' ~ user.id) }}">
+															<button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')">Supprimer</button>
+														</form>
+													</div>
+												</td>
+											</tr>
+										{% endfor %}
+									</tbody>
+								</table>
+							</div>
+						{% else %}
+							<div class="empty-state">
+								<i class="bi bi-people"></i>
+								<h4>Aucun utilisateur</h4>
+								<p>Aucun utilisateur trouvé dans la base de données.</p>
+							</div>
+						{% endif %}
+					</div>
+				{% endif %}
+
+				<!-- Onglet Liens -->
+				{% if activeTab == 'links' or (not is_granted('ROLE_ADMIN') and activeTab != 'users') %}
+					<div class="tab-panel active" id="links-tab">
+						<div class="tab-header">
+							<div class="tab-actions">
+								<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addLinkModal">
+									<i class="bi bi-plus"></i>
+									Ajouter un lien
+								</button>
+							</div>
+						</div>
+
+						{% if links|length > 0 %}
+							<div class="data-table">
+								<table>
+									<thead>
+										<tr>
+											<th>ID</th>
+											<th>Titre</th>
+											<th>URL</th>
+											<th>Utilisateur</th>
+											<th>Tags</th>
+											<th>Date</th>
+											<th>Actions</th>
+										</tr>
+									</thead>
+									<tbody>
+										{% for link in links %}
+											<tr>
+												<td>{{ link.id }}</td>
+												<td>{{ link.title }}</td>
+												<td>
+													<a href="{{ link.url }}" target="_blank" class="link-url">
+														{% if link.url|length > 30 %}
+															{{ link.url|slice(0, 30) }}...
+														{% else %}
+															{{ link.url }}
+														{% endif %}
+													</a>
+												</td>
+												<td>{{ link.user ? link.user.username : 'Anonyme' }}</td>
+												<td>
+													{% if link.tags|length > 0 %}
+														{% for tag in link.tags %}
+															<span class="tag-badge-small">{{ tag.name }}</span>
+														{% endfor %}
+													{% else %}
+														<span class="text-muted">Aucun tag</span>
+													{% endif %}
+												</td>
+												<td>{{ link.createdAt|date('d/m/Y') }}</td>
+												<td>
+													<div class="action-buttons">
+														<a href="{{ link.url }}" target="_blank" class="btn btn-sm btn-info">Voir</a>
+														<button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editLinkModal" data-link-id="{{ link.id }}" data-link-title="{{ link.title|e('html_attr') }}" data-link-url="{{ link.url|e('html_attr') }}" data-link-desc="{{ link.desc|e('html_attr') }}" data-link-tags="{{ link.tags|map(t => t.id)|json_encode|e('html_attr') }}">Éditer</button>
+														<form method="post" action="{{ path('app_link_delete', {id: link.id}) }}" style="display: inline;">
+															<input type="hidden" name="_token" value="{{ csrf_token('delete-link-' ~ link.id) }}">
+															<button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce lien ?')">Supprimer</button>
+														</form>
+													</div>
+												</td>
+											</tr>
+										{% endfor %}
+									</tbody>
+								</table>
+							</div>
+						{% else %}
+							<div class="empty-state">
+								<i class="bi bi-link-45deg"></i>
+								<h4>Aucun lien</h4>
+								<p>Aucun lien trouvé dans la base de données.</p>
+							</div>
+						{% endif %}
+					</div>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+
+	<!-- Modals -->
+	{% if is_granted('ROLE_ADMIN') %}
+		<!-- Add User Modal -->
+		<div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<form method="post" action="{{ path('app_user_create') }}">
+						<div class="modal-header">
+							<h5 class="modal-title" id="addUserModalLabel">Ajouter un utilisateur</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<div class="modal-body">
+							<input type="hidden" name="_token" value="{{ csrf_token('create-user') }}">
+							<div class="mb-3">
+								<label for="addUsername" class="form-label">Nom d'utilisateur *</label>
+								<input type="text" class="form-control" id="addUsername" name="username" required>
+							</div>
+							<div class="mb-3">
+								<label for="addPassword" class="form-label">Mot de passe *</label>
+								<input type="password" class="form-control" id="addPassword" name="password" required>
+							</div>
+							<div class="mb-3">
+								<label class="form-label">Rôles</label>
+								<div class="form-check">
+									<input class="form-check-input" type="checkbox" name="roles[]" value="ROLE_USER" id="addRoleUser" checked>
+									<label class="form-check-label" for="addRoleUser">Utilisateur</label>
+								</div>
+								<div class="form-check">
+									<input class="form-check-input" type="checkbox" name="roles[]" value="ROLE_ADMIN" id="addRoleAdmin">
+									<label class="form-check-label" for="addRoleAdmin">Administrateur</label>
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+							<button type="submit" class="btn btn-primary">Créer</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<!-- Edit User Modal -->
+		<div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<form method="post" id="editUserForm">
+						<div class="modal-header">
+							<h5 class="modal-title" id="editUserModalLabel">Modifier un utilisateur</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<div class="modal-body">
+							<input type="hidden" name="_token" value="{{ csrf_token('edit-user') }}">
+							<div class="mb-3">
+								<label for="editUsername" class="form-label">Nom d'utilisateur *</label>
+								<input type="text" class="form-control" id="editUsername" name="username" required>
+							</div>
+							<div class="mb-3">
+								<label for="editPassword" class="form-label">Nouveau mot de passe (optionnel)</label>
+								<input type="password" class="form-control" id="editPassword" name="password">
+								<small class="form-text text-muted">Laissez vide pour conserver le mot de passe actuel</small>
+							</div>
+							<div class="mb-3">
+								<label class="form-label">Rôles</label>
+								<div class="form-check">
+									<input class="form-check-input" type="checkbox" name="roles[]" value="ROLE_USER" id="editRoleUser">
+									<label class="form-check-label" for="editRoleUser">Utilisateur</label>
+								</div>
+								<div class="form-check">
+									<input class="form-check-input" type="checkbox" name="roles[]" value="ROLE_ADMIN" id="editRoleAdmin">
+									<label class="form-check-label" for="editRoleAdmin">Administrateur</label>
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+							<button type="submit" class="btn btn-warning">Modifier</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	{% endif %}
+
+	<!-- Add Link Modal -->
+	<div class="modal fade" id="addLinkModal" tabindex="-1" aria-labelledby="addLinkModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<form method="post" action="{{ path('app_link_create') }}">
+					<div class="modal-header">
+						<h5 class="modal-title" id="addLinkModalLabel">Ajouter un lien</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<input type="hidden" name="_token" value="{{ csrf_token('create-link') }}">
+						<div class="mb-3">
+							<label for="addLinkTitle" class="form-label">Titre *</label>
+							<input type="text" class="form-control" id="addLinkTitle" name="title" required>
+						</div>
+						<div class="mb-3">
+							<label for="addLinkUrl" class="form-label">URL *</label>
+							<input type="url" class="form-control" id="addLinkUrl" name="url" required>
+						</div>
+						<div class="mb-3">
+							<label for="addLinkDesc" class="form-label">Description</label>
+							<textarea class="form-control" id="addLinkDesc" name="desc" rows="3"></textarea>
+						</div>
+						<div class="mb-3">
+							<label class="form-label">Tags</label>
+							<div class="border rounded p-2" style="max-height: 200px; overflow-y: auto;">
+								{% if tags is defined and tags|length > 0 %}
+									{% for tag in tags %}
+										<div class="form-check">
+											<input class="form-check-input" type="checkbox" name="tags[]" value="{{ tag.id }}" id="addTag{{ tag.id }}">
+											<label class="form-check-label" for="addTag{{ tag.id }}">
+												{{ tag.name }}
+											</label>
+										</div>
+									{% endfor %}
+								{% else %}
+									<p class="text-muted mb-0">Aucun tag disponible</p>
+								{% endif %}
+							</div>
+							<div class="mt-2">
+								<label for="addNewTag" class="form-label">Nouveau tag :</label>
+								<input type="text" class="form-control" id="addNewTag" name="new_tag" placeholder="Nom du nouveau tag (optionnel)">
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+						<button type="submit" class="btn btn-primary">Créer</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<!-- Edit Link Modal -->
+	<div class="modal fade" id="editLinkModal" tabindex="-1" aria-labelledby="editLinkModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<form method="post" id="editLinkForm">
+					<div class="modal-header">
+						<h5 class="modal-title" id="editLinkModalLabel">Modifier un lien</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<input type="hidden" name="_token" value="{{ csrf_token('edit-link') }}">
+						<div class="mb-3">
+							<label for="editLinkTitle" class="form-label">Titre *</label>
+							<input type="text" class="form-control" id="editLinkTitle" name="title" required>
+						</div>
+						<div class="mb-3">
+							<label for="editLinkUrl" class="form-label">URL *</label>
+							<input type="url" class="form-control" id="editLinkUrl" name="url" required>
+						</div>
+						<div class="mb-3">
+							<label for="editLinkDesc" class="form-label">Description</label>
+							<textarea class="form-control" id="editLinkDesc" name="desc" rows="3"></textarea>
+						</div>
+						<div class="mb-3">
+							<label class="form-label">Tags</label>
+							<div class="border rounded p-2" style="max-height: 200px; overflow-y: auto;">
+								{% if tags is defined and tags|length > 0 %}
+									{% for tag in tags %}
+										<div class="form-check">
+											<input class="form-check-input" type="checkbox" name="tags[]" value="{{ tag.id }}" id="editTag{{ tag.id }}">
+											<label class="form-check-label" for="editTag{{ tag.id }}">
+												{{ tag.name }}
+											</label>
+										</div>
+									{% endfor %}
+								{% else %}
+									<p class="text-muted mb-0">Aucun tag disponible</p>
+								{% endif %}
+							</div>
+							<div class="mt-2">
+								<label for="editNewTag" class="form-label">Nouveau tag :</label>
+								<input type="text" class="form-control" id="editNewTag" name="new_tag" placeholder="Nom du nouveau tag (optionnel)">
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+						<button type="submit" class="btn btn-warning">Modifier</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+console.log('Initializing modals...');
+
+// Function to clear modal forms
+function clearModalForms(modalId) {
+if (modalId === 'editUserModal') {
+var editUsername = document.getElementById('editUsername');
+var editPassword = document.getElementById('editPassword');
+var editRoleUser = document.getElementById('editRoleUser');
+var editRoleAdmin = document.getElementById('editRoleAdmin');
+
+if (editUsername) 
+editUsername.value = '';
+
+if (editPassword) 
+editPassword.value = '';
+
+if (editRoleUser) 
+editRoleUser.checked = false;
+
+if (editRoleAdmin) 
+editRoleAdmin.checked = false;
+
+}
+
+if (modalId === 'editLinkModal') {
+var editLinkTitle = document.getElementById('editLinkTitle');
+var editLinkUrl = document.getElementById('editLinkUrl');
+var editLinkDesc = document.getElementById('editLinkDesc');
+var editNewTag = document.getElementById('editNewTag');
+
+if (editLinkTitle) 
+editLinkTitle.value = '';
+
+if (editLinkUrl) 
+editLinkUrl.value = '';
+
+if (editLinkDesc) 
+editLinkDesc.value = '';
+
+if (editNewTag) 
+editNewTag.value = '';
+
+
+// Clear all tag checkboxes
+document.querySelectorAll('#editLinkModal input[name="tags[]"]').forEach(function (checkbox) {
+checkbox.checked = false;
+});
+}
+}
+
+// Simple modal show/hide functions
+function showModal(modalId) {
+console.log('Showing modal:', modalId);
+var modal = document.getElementById(modalId);
+if (modal) {
+modal.style.display = 'block';
+modal.classList.add('show');
+document.body.style.overflow = 'hidden';
+
+// Add backdrop
+if (!document.querySelector('.modal-backdrop')) {
+var backdrop = document.createElement('div');
+backdrop.className = 'modal-backdrop fade show';
+document.body.appendChild(backdrop);
+}
+}
+}
+
+function hideModal(modalId) {
+console.log('Hiding modal:', modalId);
+var modal = document.getElementById(modalId);
+if (modal) {
+modal.style.display = 'none';
+modal.classList.remove('show');
+document.body.style.overflow = '';
+
+// Remove backdrop
+var backdrop = document.querySelector('.modal-backdrop');
+if (backdrop) {
+backdrop.remove();
+}
+}
+}
+
+// Handle modal triggers
+document.addEventListener('click', function (e) { // Handle modal triggers
+if (e.target.matches('[data-bs-toggle="modal"]') || e.target.closest('[data-bs-toggle="modal"]')) {
+e.preventDefault();
+var trigger = e.target.matches('[data-bs-toggle="modal"]') ? e.target : e.target.closest('[data-bs-toggle="modal"]');
+var targetSelector = trigger.getAttribute('data-bs-target');
+var modalId = targetSelector.replace('#', '');
+
+console.log('Modal trigger clicked:', modalId);
+
+// Clear forms first
+clearModalForms(modalId);
+
+// Handle edit user modal data
+if (modalId === 'editUserModal') {
+var userId = trigger.getAttribute('data-user-id');
+var username = trigger.getAttribute('data-user-username');
+var roles = JSON.parse(trigger.getAttribute('data-user-roles') || '["ROLE_USER"]');
+
+console.log('User data:', {userId, username, roles});
+
+// Populate form after modal is shown
+setTimeout(function () {
+var editUserForm = document.getElementById('editUserForm');
+var editUsername = document.getElementById('editUsername');
+var editPassword = document.getElementById('editPassword');
+var editRoleUser = document.getElementById('editRoleUser');
+var editRoleAdmin = document.getElementById('editRoleAdmin');
+
+if (editUserForm && userId) {
+editUserForm.action = '{{ path('app_user_edit', {id: '__ID__'}) }}'.replace('__ID__', userId);
+}
+if (editUsername) {
+editUsername.value = username || '';
+console.log('Set username:', username);
+}
+if (editPassword) {
+editPassword.value = '';
+}
+if (editRoleUser) {
+editRoleUser.checked = roles.includes('ROLE_USER');
+}
+if (editRoleAdmin) {
+editRoleAdmin.checked = roles.includes('ROLE_ADMIN');
+}
+}, 50);
+}
+
+// Handle edit link modal data
+if (modalId === 'editLinkModal') {
+var linkId = trigger.getAttribute('data-link-id');
+var title = trigger.getAttribute('data-link-title');
+var url = trigger.getAttribute('data-link-url');
+var desc = trigger.getAttribute('data-link-desc');
+var linkTags = JSON.parse(trigger.getAttribute('data-link-tags') || '[]');
+
+console.log('Link data:', {
+linkId,
+title,
+url,
+desc,
+linkTags
+});
+
+// Populate form after modal is shown
+setTimeout(function () {
+var editLinkForm = document.getElementById('editLinkForm');
+var editLinkTitle = document.getElementById('editLinkTitle');
+var editLinkUrl = document.getElementById('editLinkUrl');
+var editLinkDesc = document.getElementById('editLinkDesc');
+var editNewTag = document.getElementById('editNewTag');
+
+if (editLinkForm && linkId) {
+editLinkForm.action = '{{ path('app_link_edit', {id: '__ID__'}) }}'.replace('__ID__', linkId);
+}
+if (editLinkTitle) {
+editLinkTitle.value = title || '';
+console.log('Set title:', title);
+}
+if (editLinkUrl) {
+editLinkUrl.value = url || '';
+console.log('Set url:', url);
+}
+if (editLinkDesc) {
+editLinkDesc.value = desc || '';
+console.log('Set desc:', desc);
+}
+
+// Clear all checkboxes first
+document.querySelectorAll('#editLinkModal input[name="tags[]"]').forEach(function (checkbox) {
+checkbox.checked = false;
+});
+
+// Check the appropriate tag checkboxes
+linkTags.forEach(function (tagId) {
+var checkbox = document.getElementById('editTag' + tagId);
+if (checkbox) {
+checkbox.checked = true;
+console.log('Checked tag:', tagId);
+}
+});
+
+// Clear new tag field
+if (editNewTag) {
+editNewTag.value = '';
+}
+}, 50);
+}
+
+showModal(modalId);
+}
+
+// Handle modal close buttons
+if (e.target.matches('[data-bs-dismiss="modal"]') || e.target.matches('.modal-backdrop')) {
+e.preventDefault();
+var modal = e.target.closest('.modal');
+if (modal) {
+hideModal(modal.id);
+} else { // If clicked on backdrop, close any open modal
+document.querySelectorAll('.modal.show').forEach(function (m) {
+hideModal(m.id);
+});
+}
+}
+});
+
+console.log('Modal system initialized successfully');
+});
+	</script>
+{% endblock %}

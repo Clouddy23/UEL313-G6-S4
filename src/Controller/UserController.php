@@ -30,7 +30,15 @@ final class UserController extends AbstractController
         $users = $entityManager
             ->getRepository(User::class)
             ->findAll();
-        return $this->json(['users' => $users]);
+
+        $data = array_map(fn(User $user) => [
+            'id' => $user->getId(),
+            'username' => $user->getUsername(),
+            'roles' => $user->getRoles(),
+            'links_count' => $user->getLinks()->count(),
+        ], $users);
+
+        return $this->json(['users' => $data]);
     }
 
     //-- WEB PAGE RENDERING --
@@ -85,7 +93,7 @@ final class UserController extends AbstractController
 
         $user = new User();
         $user->setUsername($data['username']);
-        $user->setPassword($data['password']); // Password should be hashed
+        $user->setPassword($data['password']);
         if (isset($data['roles']) && is_array($data['roles'])) {
             $user->setRoles($data['roles']);
         }
