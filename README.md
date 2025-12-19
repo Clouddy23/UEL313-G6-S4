@@ -77,7 +77,7 @@ brew --version`
 brew install php
 php -v`
 
-#### Vérification des extensions PHP requises (ZIP, SQLite, PDO_SQLITE)
+#### Vérification des extensions PHP requises
 
 `php -m | grep -E "zip|sqlite|pdo_sqlite"`
 
@@ -87,7 +87,7 @@ extension=zip
 extension=pdo_sqlite
 extension=sqlite3`
 
-#### Installation, mise à jour et vérification de la version de Composer (gestionnaire de dépendances PHP)
+#### Installation, mise à jour et vérification de la version de Composer
 
 `brew install composer
 sudo composer self-update
@@ -98,10 +98,6 @@ composer -V`
 `brew install symfony-cli/tap/symfony-cli
 symfony -V
 symfony check:requirements`
-
-#### Installation DB Browser pour SQLite
-
-`brew install --cask db-browser-for-sqlite`
 
 ### Création du projet Watson-Symfony
 
@@ -119,11 +115,10 @@ code .env.local`
 
 Dans .env.local, activer DATABASE_URL="SQLite..." (supprimer #) et désactiver DATABASE_URL="postgesql..." (ajouter #).
 
-#### Installer de SQLite Browser
+#### Installer DB Browser
 
 Avec SQLite, la BDD est un fichier .db qui sera créé lors des migrations (après création des entités).
-La visualisation de la BDD peut se faire grâce à l'installation de DB Browser :
-`brew install db-browser-for-sqlite`
+La visualisation et les manipulations de la BDD peuvent ensuite se faire grâce à l'installation de DBBrowser qui peut se faire via un exécutable sur Windows ou grâce au gestionnaire de paquets _HomeBrew_ sur Mac.
 
 #### Tester le serveur Symfony
 
