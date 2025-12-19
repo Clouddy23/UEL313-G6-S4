@@ -7,7 +7,7 @@ _WATSON_ est une application de gestion et de mutualisation de liens. Son code s
 - [x] Prise en main du cadriciel Symfony 6.4 (LTS)
 - [x] Développement d'une API
 - [x] Création de templates TWIG
-- [x] Fonctionnalités MVP :
+- [x] Fonctionnalités MVP
   - [x] listing de liens stockés en base de données ;
   - [x] ajout de lien en base de donnés à partir d'un formulaire, un lien étant composé au minimum d'un titre et d'une URL et d'un descriptif ;
   - [x] mise à jour des liens stockés en base de données
@@ -51,7 +51,7 @@ Tous les membres du groupe ont contribué de manière équilibrée et proportion
 |  16/12   | Visio d'organisation : répartition des tâches, création des issues/branches.                      |
 |  17/12   | Phase de développement                                                                            |
 |  18/12   | Phase de relecture : Review et correction des branches (PR).                                      |
-|  19/12   | Fin du projet : Tests manuels fonctionnels, fusion des branches vers `main`, finalisation du PDF. |
+|  20/12   | Fin du projet : Tests manuels fonctionnels, fusion des branches vers `main`, finalisation du PDF. |
 
 ## Mise en place de l'environnement de développement
 
@@ -232,6 +232,16 @@ L'interface de _Nelmio_, nous a servi pour tester l'API et nous assurer que tout
 ![Nelmio exemple test](/docs/test_getlinks.png)
 
 La création de cette API a été ambitieuse et seulement une petite partie de ses méthodes a été reprise pour l'implémentation des routes publiques. Cependant elle pourra éventuellement servir dans la maintenance évolutive de l'application, si elle est appelée à évoluer.
+
+## Architecture hybride : SSR vs API REST
+
+Dans son état actuel notre projet a une architecture hybride. Il a commencé, à des fins de test, comme un projet API REST comme on pourrait en trouver dans la plupart des frameworks _nodeJS_ : on a créé des endpoints API (dans LinkController, UserController, TagsController) accessibles par des requêtes HTTP et qui ne srvent qu'à la transmission pure d'informations entre le serveur et des clients sous format JSON.
+
+![API Diagram](/docs/apidiagram.png)
+
+Toutefois, la partie publique et "fonctionnelle" de l'application suit le modèle SSR (Server Side Rendering) telle qu'implémenté dans le contrôleur _HomeController_ : le serveur Symfony génère entièrement les pages HTML avant de les envoyer au navigateur. Plus précisément, ce contrôleur reçoit les requêtes HTTP, traite les données, puis utilise Twig pour produire le HTML final avant de l'envoyer au navigateur de l'utilisateur.
+
+![SSR Diagram](/docs/ssrdiagram.png)
 
 ## Implémentation des routes Web
 
