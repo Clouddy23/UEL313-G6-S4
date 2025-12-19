@@ -6,13 +6,16 @@
 
 ## Objectifs
 
-- Mettre en place une application Symfony **6.4 (LTS)**
-- Développer une gestion de liens stockés en base de données :
+- [x] Prise en main du cadriciel Symfony 6.4 (LTS)
+- [x] Développement d'une API
+- [x] Création de templates TWIG
+- [x] Création d'une UI moderne
+- [x] Développement de diverses fonctionnalités
   - **Lister** les liens
   - **Ajouter** un lien via formulaire (**titre**, **URL**, **descriptif**)
   - **Mettre à jour** un lien
   - **Supprimer** un lien
-- Approcher davantage le projet “Watson” en ajoutant :
+- [x] Approcher davantage le projet “Watson” en ajoutant :
   - Des **mots-clés** associés aux liens
   - Un **back office** sécurisé
   - Une **gestion d’utilisateurs**
@@ -33,28 +36,25 @@ Tous les membres du groupe ont contribué de manière équilibrée et proportion
 
 ### Répartition du travail
 
-| Activité                                                    | Responsable(s)                                   | Branche                                            |
-| ----------------------------------------------------------- | ------------------------------------------------ | -------------------------------------------------- |
-| Base projet (Symfony 6.4 LTS) + configuration environnement | Mathilde Chauvet (Clouddy23)                     | `main`                                             |
-| Modèle de données (BDD + entités + migrations)              | Filippos K. (filkat34)                           | `feature/datastructure`                            |
-| CRUD Link (Entity, Form, Controller, Twig)                  | Mathieu L. (mathleys)                            | `feature/link controller` `feature/tag controller` |
-| UI Twig/CSS (base)                                          | Kamo G. (Spaghette5)                             | `feature/ui`                                       |
-| (Option) Back office + sécurité                             | Mathieu L. (mathleys)                            | `feature/backoffice`                               |
-| Documentation + captures + PDF (README → PDF)               | Filippos K. (filkat34) & Mathilde C. (Clouddy23) | /                                                  |
+| Activité                                                    | Responsable(s)       |
+| ----------------------------------------------------------- | -------------------- |
+| Initialisation et configuration de l'environnement dev      | Mathilde             |
+| Modèle de données (entités, repositories, migrations)       | Filippos             |
+| API Users, authentification, inscription                    | Filippos             |
+| API Liens                                                   | Mathieu              |
+| API Tags                                                    | Mathilde             |
+| UI Twig/CSS                                                 | Kamo                 |
+| Documentation + captures + PDF (README → PDF)               | Groupe 6             |
 
 ### Calendrier de suivi du projet
-
-Une réunion visio d'équipe est prévue à chaque fin d'échéance.
 
 | Échéance | Objectif                                                                                          |
 | :------: | :------------------------------------------------------------------------------------------------ |
 |  15/12   | Phase d’installation : installation Symfony 6.4 LTS, préparation du repository.                   |
 |  16/12   | Visio d'organisation : répartition des tâches, création des issues/branches.                      |
-|  17/12   | Phase de développement : ???.                                                                     |
+|  17/12   | Phase de développement                                                                            |
 |  18/12   | Phase de relecture : Review et correction des branches (PR).                                      |
 |  19/12   | Fin du projet : Tests manuels fonctionnels, fusion des branches vers `main`, finalisation du PDF. |
-
----
 
 ## Mise en place de l'environnement de développement
 
@@ -68,7 +68,7 @@ Tous les outils suivants doivent être disponibles “globalement” dans le ter
 
 ### Installation de Symfony CLI 6.4 LTS (MacOS + Terminal)
 
-#### Installation et vérification de la version de Homebrew (gestionnaire de paquets)**
+#### Installation et vérification de la version de Homebrew (gestionnaire de paquets)
 
 `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 brew --version
@@ -80,7 +80,7 @@ brew --version`
 brew install php
 php -v`
 
-#### Vérification des extensions PHP requises (ZIP, SQLite, PDO_SQLITE)**
+#### Vérification des extensions PHP requises (ZIP, SQLite, PDO_SQLITE)
 
 `php -m | grep -E "zip|sqlite|pdo_sqlite"`
 
@@ -96,13 +96,13 @@ extension=sqlite3`
 sudo composer self-update
 composer -V`
 
-#### Installation et vérification de Symfony CLI et de ses prérequis**
+#### Installation et vérification de Symfony CLI et de ses prérequis
 
 `brew install symfony-cli/tap/symfony-cli
 symfony -V
 symfony check:requirements`
 
-#### Installation DB Browser pour SQLite (outil de visualisation BDD)**
+#### Installation DB Browser pour SQLite (outil de visualisation BDD)
 
 `brew install --cask db-browser-for-sqlite`
 
@@ -114,7 +114,7 @@ Création d’un nouveau projet Symfony dans un dossier `watson-symfony` en for�
 `symfony new watson-symfony --version="6.4.*" --webapp
 cd watson-symfony`
 
-#### Configuration de SQLite dans .env.local**
+#### Configuration de SQLite dans .env.local
 
 On copie .env vers .env.local afin de : préserver la configuration par défaut (.env) et permettre à chaque membre du groupe d’avoir sa configuration locale (.env.local) :
 `cp .env .env.local
@@ -122,13 +122,13 @@ code .env.local`
 
 Dans .env.local, activer DATABASE_URL="SQLite..." (supprimer #) et désactiver DATABASE_URL="postgesql..." (ajouter #).
 
-#### Installation de SQLite Browser**
+#### Installation de SQLite Browser
 
 Avec SQLite, la BDD est un fichier .db qui sera créé lors des migrations (après création des entités).
 La visualisation de la BDD peut se faire grâce à l'installation de DB Browser :
 `brew install db-browser-for-sqlite`
 
-#### Test du lancement du serveur Symfony**
+#### Test du lancement du serveur Symfony
 
 `cd "./S4/watson-symfony"
 symfony server:start`
@@ -166,11 +166,13 @@ Suites à ces commandes nous vérifions grâce à _DB Browser_ que la base de do
 
 ![DB Browser](/docs/dbbrowser.png)
 
-### Documentation et tests CRUD
+### Documentation et tests : _Nelmio_
 
 Pour faciliter la documentation, le codage et l'implementation des méthodes CRUD, nous avons installé _Nelmio_ avec la commande : `composer require nelmio/api-doc-bundle`
 
 Pour le configurer, nous avons suivi la documentation disponible sur le site de [Symfony](https://symfony.com/bundles/NelmioApiDocBundle/current/index.html#installation).
+
+L'interface de test est disponible sur la route [/api/doc](http://localhost:8000/api/doc).
 
 ## Codage de l'API
 
@@ -250,15 +252,16 @@ Nous avons mis en place un système d'authentification et d'inscription en suiva
 
 ## Front-end
 
-???
+### Création des templates TWIG
+
+### Stylage et responsivité
 
 ### Webographie
 
-- Installation de PHP : [https://www.php.net/downloads.php](https://www.php.net/downloads.php)
-- Installation de Composer : [https://getcomposer.org/](https://getcomposer.org/)
-- Installation de Symfony CLI : [https://symfony.com/download](https://symfony.com/download)
-- Installation de DB Browser pour SQLite : [https://sqlitebrowser.org/](https://sqlitebrowser.org/)
-- Calendrier des releases Symfony : [https://symfony.com/releases](https://symfony.com/releases)
-- Package - Symfony Demo : [https://packagist.org/packages/symfony/demo](https://packagist.org/packages/symfony/demo)
-- Démarrage de Symfony : [https://symfony.com/doc/current/setup.html](https://symfony.com/doc/current/setup.)
-- Installation de Nelmio : [https://symfony.com/bundles/NelmioApiDocBundle/current/index.html#installation](https://symfony.com/bundles/NelmioApiDocBundle/current/index.html#installation)
+- [PHP](https://www.php.net/downloads.php)
+- [Composer](https://getcomposer.org/)
+- [Symfony CLI](https://symfony.com/download)
+- [Symfony SecurityBundle](https://symfony.com/doc/current/security)
+- [Mise en place d'un projet Symfony](https://symfony.com/doc/current/setup)
+- [DB Browser](https://sqlitebrowser.org/)
+- [Nelmio](https://symfony.com/bundles/NelmioApiDocBundle/current/index.html#installation)
