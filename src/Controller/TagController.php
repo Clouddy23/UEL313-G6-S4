@@ -33,21 +33,6 @@ final class TagController extends AbstractController
         return $this->json(['tags' => $data]);
     }
 
-    //WEB PAGE RENDERING --
-    #[Route('/tags', name: 'tag_list', methods: ['GET'])]
-    public function listTags(EntityManagerInterface $em): Response
-    {
-        $tags = $em->getRepository(Tag::class)->findAll();
-
-        $data = array_map(fn(Tag $tag) => [
-            'id' => $tag->getId(),
-            'name' => $tag->getName(),
-            'link_ids' => array_map(fn(Link $l) => $l->getId(), $tag->getLinks()->toArray()),
-        ], $tags);
-
-        return $this->json(['tags' => $data]);
-    }
-
     #[OA\Get(
         path: '/api/tags/{id}',
         summary: 'Retourne un tag par son ID',

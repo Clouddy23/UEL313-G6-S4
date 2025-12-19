@@ -59,16 +59,6 @@ final class LinkController extends AbstractController
         return $this->json(['links' => $data]);
     }
 
-    //-- WEB PAGE RENDERING --
-    #[Route('/links', name: 'link_list', methods: ['GET'])]
-    public function listLinks(LinkRepository $linkRepository): Response
-    {
-        // Using repository method to get links with tags and users
-        $links = $linkRepository->findAllWithTagsAndUsers();
-
-        return $this->render('index.html.twig', ['links' => $links]);
-    }
-
     #[OA\Post(
         path: '/api/links',
         summary: 'Ajoute un nouveau lien',

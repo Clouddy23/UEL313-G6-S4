@@ -74,7 +74,7 @@ Tous les outils suivants doivent être disponibles “globalement” dans le ter
 brew --version
 brew --version`
 
-#### Installation et vérification de la version PHP**
+#### Installation et vérification de la version PHP
 
 `brew update
 brew install php
@@ -90,7 +90,7 @@ extension=zip
 extension=pdo_sqlite
 extension=sqlite3`
 
-#### Installation, mise à jour et vérification de la version de Composer (gestionnaire de dépendances PHP)**
+#### Installation, mise à jour et vérification de la version de Composer (gestionnaire de dépendances PHP)
 
 `brew install composer
 sudo composer self-update
@@ -102,19 +102,19 @@ composer -V`
 symfony -V
 symfony check:requirements`
 
-#### Installation DB Browser pour SQLite (outil de visualisation BDD)
+#### Installation DB Browser pour SQLite
 
 `brew install --cask db-browser-for-sqlite`
 
-### Création du projet Symfony 6.4 LTS (Watson-Symfony)
+### Création du projet Watson-Symfony
 
-#### Se placer dans le dossier de travail (emplacement du projet)**
+#### Se placer dans le dossier de travail
 
 Création d’un nouveau projet Symfony dans un dossier `watson-symfony` en forçant la version 6.4 LTS :
 `symfony new watson-symfony --version="6.4.*" --webapp
 cd watson-symfony`
 
-#### Configuration de SQLite dans .env.local
+#### Configurer de SQLite dans .env.local
 
 On copie .env vers .env.local afin de : préserver la configuration par défaut (.env) et permettre à chaque membre du groupe d’avoir sa configuration locale (.env.local) :
 `cp .env .env.local
@@ -122,13 +122,13 @@ code .env.local`
 
 Dans .env.local, activer DATABASE_URL="SQLite..." (supprimer #) et désactiver DATABASE_URL="postgesql..." (ajouter #).
 
-#### Installation de SQLite Browser
+#### Installer de SQLite Browser
 
 Avec SQLite, la BDD est un fichier .db qui sera créé lors des migrations (après création des entités).
 La visualisation de la BDD peut se faire grâce à l'installation de DB Browser :
 `brew install db-browser-for-sqlite`
 
-#### Test du lancement du serveur Symfony
+#### Tester le serveur Symfony
 
 `cd "./S4/watson-symfony"
 symfony server:start`
@@ -137,7 +137,7 @@ Se rendre à l'URL indiquée par le serveur : <http://127.0.0.1:8000>
 
 ![Home page Symfony](docs/home-page-symfony.png)
 
-### Mise à jour du fichier .env
+### Mettre à jour du fichier .env
 
 - Modification du fichier _.env_ en renseignant l'URL correct de la base de données : `DATABASE_URL="sqlite:///%kernel.project_dir%/var/watson.db"`
 - Modification du fichier _.gitignore_ pour exclure le fichier _watson.db_ afin qu'il puisse être partagé avec les collaborateurs.
@@ -248,7 +248,15 @@ Nous avons mis en place un système d'authentification et d'inscription en suiva
 - `composer require symfony/security-bundle`pour installer le _SecurityBundle_ qui ajoute toutes les fonctionnalités nécessaires à l'authentification ;
 - `php bin/console make:user` pour récréer une entité _User_ compatible avec Symfony. Nous avons dû procéder à des refactorisations et à la réinitialisation de la base de données;
 - `php bin/console make:registration-form` pour ajouter un formulaire d'inscription et les méthodes nécessaires pour l'enregistrement dun nouvel utilisateur
-- interventions au niveau du fichier `config/packages/security.yaml` pour sécuriser les routes par l'authentification
+- interventions au niveau du fichier `config/packages/security.yaml` pour sécuriser les routes en exigeant une authentification en cas de requêtes sur les routes de l'APIet en donnant un accès public aux routes de `/login`, `register` et `feed`
+
+![firewallApi](/docs/protecapiroutes.png)
+
+![PublicRoutes](/docs/publicroutes.png)
+
+- inverventions également à l'intérieur de la route du _backoffice_ pour discriminer, concernant la disponibilité des deux onglets (utilisateurs, liens), en fonction des rôles des utilisateurs connectés : le rôle USER ne peut que ajouter/modifier/supprimer des liens alors que le rôle ADMIN peut en plus gérer les comptes des utilisateurs.
+
+![TagsBackofficePermissions](/docs/backofficetabs.png)
 
 ## Front-end
 
