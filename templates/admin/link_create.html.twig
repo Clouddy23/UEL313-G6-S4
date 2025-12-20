@@ -1,0 +1,80 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Créer un lien
+{% endblock %}
+
+{% block body %}
+	<div class="backoffice-container">
+		<div class="page-header">
+			<h1>Créer un lien</h1>
+			<p>Ajouter un nouveau lien à votre collection</p>
+		</div>
+
+		<!-- Flash Messages -->
+		{% for type, messages in app.flashes %}
+			{% for message in messages %}
+				<div class="alert alert-{{ type == 'error' ? 'danger' : type }} alert-dismissible fade show" role="alert">
+					{{ message }}
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>
+			{% endfor %}
+		{% endfor %}
+
+		<div class="card">
+			<div class="card-body">
+				<form method="post" action="{{ path('app_link_create') }}">
+					<input type="hidden" name="_token" value="{{ csrf_token('create-link') }}">
+
+					<div class="mb-3">
+						<label for="title" class="form-label">Titre *</label>
+						<input type="text" class="form-control" id="title" name="title" required autofocus>
+					</div>
+
+					<div class="mb-3">
+						<label for="url" class="form-label">URL *</label>
+						<input type="url" class="form-control" id="url" name="url" required placeholder="https://example.com">
+					</div>
+
+					<div class="mb-3">
+						<label for="desc" class="form-label">Description</label>
+						<textarea class="form-control" id="desc" name="desc" rows="3"></textarea>
+					</div>
+
+					<div class="mb-3">
+						<label class="form-label">Tags</label>
+						<div class="tags-checkboxes">
+							{% if tags|length > 0 %}
+								{% for tag in tags %}
+									<div class="form-check">
+										<input class="form-check-input" type="checkbox" name="tags[]" value="{{ tag.id }}" id="tag{{ tag.id }}">
+										<label class="form-check-label" for="tag{{ tag.id }}">
+											{{ tag.name }}
+										</label>
+									</div>
+								{% endfor %}
+							{% else %}
+								<small class="text-muted">Aucun tag disponible. Créez-en un ci-dessous.</small>
+							{% endif %}
+						</div>
+					</div>
+
+					<div class="mb-3">
+						<label for="new_tag" class="form-label">Ajouter un nouveau tag</label>
+						<input type="text" class="form-control" id="new_tag" name="new_tag" placeholder="Nom du nouveau tag">
+					</div>
+
+					<div class="d-flex gap-2">
+						<button type="submit" class="btn btn-primary">
+							<i class="bi bi-plus-circle"></i>
+							Créer
+						</button>
+						<a href="{{ path('app_backoffice', {tab: 'links'}) }}" class="btn btn-secondary">
+							<i class="bi bi-x"></i>
+							Annuler
+						</a>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+{% endblock %}

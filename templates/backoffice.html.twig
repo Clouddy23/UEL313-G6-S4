@@ -43,10 +43,10 @@
 					<div class="tab-panel active" id="users-tab">
 						<div class="tab-header">
 							<div class="tab-actions">
-								<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">
+								<a href="{{ path('app_user_create') }}" class="btn btn-primary">
 									<i class="bi bi-plus"></i>
 									Ajouter un utilisateur
-								</button>
+								</a>
 							</div>
 						</div>
 
@@ -75,10 +75,16 @@
 												<td>{{ user.links|length }}</td>
 												<td>
 													<div class="action-buttons">
-														<button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editUserModal" data-user-id="{{ user.id }}" data-user-username="{{ user.username|e('html_attr') }}" data-user-roles="{{ user.roles|json_encode|e('html_attr') }}">Éditer</button>
+														<a href="{{ path('app_user_edit', {id: user.id}) }}" class="btn btn-sm btn-warning">
+															<i class="bi bi-pencil"></i>
+															Éditer
+														</a>
 														<form method="post" action="{{ path('app_user_delete', {id: user.id}) }}" style="display: inline;">
 															<input type="hidden" name="_token" value="{{ csrf_token('delete-user-' ~ user.id) }}">
-															<button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')">Supprimer</button>
+															<button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')">
+																<i class="bi bi-trash"></i>
+																Supprimer
+															</button>
 														</form>
 													</div>
 												</td>
@@ -102,10 +108,10 @@
 					<div class="tab-panel active" id="links-tab">
 						<div class="tab-header">
 							<div class="tab-actions">
-								<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addLinkModal">
+								<a href="{{ path('app_link_create') }}" class="btn btn-primary">
 									<i class="bi bi-plus"></i>
 									Ajouter un lien
-								</button>
+								</a>
 							</div>
 						</div>
 
@@ -150,11 +156,20 @@
 												<td>{{ link.createdAt|date('d/m/Y') }}</td>
 												<td>
 													<div class="action-buttons">
-														<a href="{{ link.url }}" target="_blank" class="btn btn-sm btn-info">Voir</a>
-														<button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editLinkModal" data-link-id="{{ link.id }}" data-link-title="{{ link.title|e('html_attr') }}" data-link-url="{{ link.url|e('html_attr') }}" data-link-desc="{{ link.desc|e('html_attr') }}" data-link-tags="{{ link.tags|map(t => t.id)|json_encode|e('html_attr') }}">Éditer</button>
+														<a href="{{ link.url }}" target="_blank" class="btn btn-sm btn-info">
+															<i class="bi bi-box-arrow-up-right"></i>
+															Voir
+														</a>
+														<a href="{{ path('app_link_edit', {id: link.id}) }}" class="btn btn-sm btn-warning">
+															<i class="bi bi-pencil"></i>
+															Éditer
+														</a>
 														<form method="post" action="{{ path('app_link_delete', {id: link.id}) }}" style="display: inline;">
 															<input type="hidden" name="_token" value="{{ csrf_token('delete-link-' ~ link.id) }}">
-															<button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce lien ?')">Supprimer</button>
+															<button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce lien ?')">
+																<i class="bi bi-trash"></i>
+																Supprimer
+															</button>
 														</form>
 													</div>
 												</td>
@@ -368,268 +383,4 @@
 		</div>
 	</div>
 
-{% endblock %}
-
-{% block javascripts %}
-	{{ parent() }}
-	<script>
-		document.addEventListener('DOMContentLoaded', function () {
-console.log('Initializing modals...');
-
-// Function to clear modal forms
-function clearModalForms(modalId) {
-if (modalId === 'editUserModal') {
-var editUsername = document.getElementById('editUsername');
-var editPassword = document.getElementById('editPassword');
-var editRoleUser = document.getElementById('editRoleUser');
-var editRoleAdmin = document.getElementById('editRoleAdmin');
-
-if (editUsername) 
-editUsername.value = '';
-
-
-
-if (editPassword) 
-editPassword.value = '';
-
-
-
-if (editRoleUser) 
-editRoleUser.checked = false;
-
-
-
-if (editRoleAdmin) 
-editRoleAdmin.checked = false;
-
-
-
-}
-
-if (modalId === 'editLinkModal') {
-var editLinkTitle = document.getElementById('editLinkTitle');
-var editLinkUrl = document.getElementById('editLinkUrl');
-var editLinkDesc = document.getElementById('editLinkDesc');
-var editNewTag = document.getElementById('editNewTag');
-
-if (editLinkTitle) 
-editLinkTitle.value = '';
-
-
-
-if (editLinkUrl) 
-editLinkUrl.value = '';
-
-
-
-if (editLinkDesc) 
-editLinkDesc.value = '';
-
-
-
-if (editNewTag) 
-editNewTag.value = '';
-
-
-
-// Clear all tag checkboxes
-document.querySelectorAll('#editLinkModal input[name="tags[]"]').forEach(function (checkbox) {
-checkbox.checked = false;
-});
-}
-}
-
-// Simple modal show/hide functions
-function showModal(modalId) {
-console.log('Showing modal:', modalId);
-var modal = document.getElementById(modalId);
-if (modal) {
-modal.style.display = 'block';
-modal.classList.add('show');
-document.body.style.overflow = 'hidden';
-
-// Add backdrop
-if (!document.querySelector('.modal-backdrop')) {
-var backdrop = document.createElement('div');
-backdrop.className = 'modal-backdrop fade show';
-document.body.appendChild(backdrop);
-}
-}
-}
-
-function hideModal(modalId) {
-console.log('Hiding modal:', modalId);
-var modal = document.getElementById(modalId);
-if (modal) {
-modal.style.display = 'none';
-modal.classList.remove('show');
-document.body.style.overflow = '';
-
-// Remove backdrop
-var backdrop = document.querySelector('.modal-backdrop');
-if (backdrop) {
-backdrop.remove();
-}
-}
-}
-
-// Handle modal triggers
-document.addEventListener('click', function (e) { // Handle modal triggers
-if (e.target.matches('[data-bs-toggle="modal"]') || e.target.closest('[data-bs-toggle="modal"]')) {
-e.preventDefault();
-var trigger = e.target.matches('[data-bs-toggle="modal"]') ? e.target : e.target.closest('[data-bs-toggle="modal"]');
-var targetSelector = trigger.getAttribute('data-bs-target');
-var modalId = targetSelector.replace('#', '');
-
-console.log('Modal trigger clicked:', modalId);
-
-// Clear forms first
-clearModalForms(modalId);
-
-// Handle edit user modal data
-if (modalId === 'editUserModal') {
-var userId = trigger.getAttribute('data-user-id');
-var username = trigger.getAttribute('data-user-username');
-var roles = JSON.parse(trigger.getAttribute('data-user-roles') || '["ROLE_USER"]');
-
-console.log('User data:', {userId, username, roles});
-
-// Store data and populate when modal is visible
-var populateUserForm = function () {
-var modal = document.getElementById('editUserModal');
-if (! modal || modal.style.display === 'none') {
-setTimeout(populateUserForm, 50);
-return;
-}
-
-var editUserForm = document.getElementById('editUserForm');
-var editUsername = document.getElementById('editUsername');
-var editPassword = document.getElementById('editPassword');
-var editRoleUser = document.getElementById('editRoleUser');
-var editRoleAdmin = document.getElementById('editRoleAdmin');
-
-console.log('Elements found:', {
-form: !! editUserForm,
-username: !! editUsername,
-password: !! editPassword,
-roleUser: !! editRoleUser,
-roleAdmin: !! editRoleAdmin
-});
-
-if (editUserForm && userId) {
-editUserForm.action = '{{ path('app_user_edit', {id: '__ID__'}) }}'.replace('__ID__', userId);
-}
-if (editUsername) {
-editUsername.value = username || '';
-}
-if (editPassword) {
-editPassword.value = '';
-}
-if (editRoleUser) {
-editRoleUser.checked = roles.includes('ROLE_USER');
-}
-if (editRoleAdmin) {
-editRoleAdmin.checked = roles.includes('ROLE_ADMIN');
-}
-};
-
-setTimeout(populateUserForm, 100);
-}
-
-// Handle edit link modal data
-if (modalId === 'editLinkModal') {
-var linkId = trigger.getAttribute('data-link-id');
-var title = trigger.getAttribute('data-link-title');
-var url = trigger.getAttribute('data-link-url');
-var desc = trigger.getAttribute('data-link-desc');
-var linkTags = JSON.parse(trigger.getAttribute('data-link-tags') || '[]');
-
-console.log('Link data:', {
-linkId,
-title,
-url,
-desc,
-linkTags
-});
-
-// Store data and populate when modal is visible
-var populateLinkForm = function () {
-var modal = document.getElementById('editLinkModal');
-if (! modal || modal.style.display === 'none') {
-setTimeout(populateLinkForm, 50);
-return;
-}
-
-var editLinkForm = document.getElementById('editLinkForm');
-var editLinkTitle = document.getElementById('editLinkTitle');
-var editLinkUrl = document.getElementById('editLinkUrl');
-var editLinkDesc = document.getElementById('editLinkDesc');
-var editNewTag = document.getElementById('editNewTag');
-
-console.log('Elements found:', {
-form: !! editLinkForm,
-title: !! editLinkTitle,
-url: !! editLinkUrl,
-desc: !! editLinkDesc,
-newTag: !! editNewTag
-});
-
-if (editLinkForm && linkId) {
-editLinkForm.action = '{{ path('app_link_edit', {id: '__ID__'}) }}'.replace('__ID__', linkId);
-}
-if (editLinkTitle) {
-editLinkTitle.value = title || '';
-}
-if (editLinkUrl) {
-editLinkUrl.value = url || '';
-}
-if (editLinkDesc) {
-editLinkDesc.value = desc || '';
-}
-
-// Clear all checkboxes first
-document.querySelectorAll('#editLinkModal input[name="tags[]"]').forEach(function (checkbox) {
-checkbox.checked = false;
-});
-
-// Check the appropriate tag checkboxes
-linkTags.forEach(function (tagId) {
-var checkbox = document.getElementById('editTag' + tagId);
-if (checkbox) {
-checkbox.checked = true;
-console.log('Checked tag:', tagId);
-} else {
-console.log('Tag checkbox not found:', tagId);
-}
-});
-
-// Clear new tag field
-if (editNewTag) {
-editNewTag.value = '';
-}
-};
-
-setTimeout(populateLinkForm, 100);
-}
-
-showModal(modalId);
-}
-
-// Handle modal close buttons
-if (e.target.matches('[data-bs-dismiss="modal"]') || e.target.matches('.modal-backdrop')) {
-e.preventDefault();
-var modal = e.target.closest('.modal');
-if (modal) {
-hideModal(modal.id);
-} else { // If clicked on backdrop, close any open modal
-document.querySelectorAll('.modal.show').forEach(function (m) {
-hideModal(m.id);
-});
-}
-}
-});
-
-console.log('Modal system initialized successfully');
-});
-	</script>
 {% endblock %}

@@ -13,14 +13,16 @@ use App\Entity\Tag;
 
 final class HomeController extends AbstractController
 {
+    /**
+     * Page d'accueil affichant les liens avec fonctionnalité de recherche
+     * @route("/", name="app_home", methods={"GET"})
+     */
     #[Route('/', name: 'app_home', methods: ['GET'])]
     public function index(Request $request, EntityManagerInterface $entityManager): Response
     {
-        // Handle search functionality
         $search = $request->query->get('search');
 
         if ($search) {
-            // Use QueryBuilder for search functionality
             $queryBuilder = $entityManager->getRepository(Link::class)->createQueryBuilder('l')
                 ->leftJoin('l.user', 'u')
                 ->leftJoin('l.tags', 't')
@@ -38,7 +40,6 @@ final class HomeController extends AbstractController
 
             $links = $queryBuilder->getQuery()->getResult();
         } else {
-            // Get all links with tags and users
             $linkRepository = $entityManager->getRepository(Link::class);
             $links = $linkRepository->createQueryBuilder('l')
                 ->leftJoin('l.user', 'u')
@@ -55,26 +56,25 @@ final class HomeController extends AbstractController
         ]);
     }
 
+    /**
+     * Backoffice pour la gestion des utilisateurs et des liens
+     * @route("/backoffice", name="app_backoffice", methods={"GET"})
+     */
     #[Route('/backoffice', name: 'app_backoffice', methods: ['GET'])]
     public function backoffice(Request $request, EntityManagerInterface $entityManager): Response
     {
-        // Check if user is authenticated
         $this->denyAccessUnlessGranted('ROLE_USER');
 
-        // Get the active tab from query parameter (default to 'links' for non-admin users)
         $activeTab = $request->query->get('tab', 'links');
 
-        // If not admin and trying to access users tab, redirect to links
         if (!$this->isGranted('ROLE_ADMIN') && $activeTab === 'users') {
             $activeTab = 'links';
         }
 
-        // If admin and no tab specified, default to users
         if ($this->isGranted('ROLE_ADMIN') && !$request->query->has('tab')) {
             $activeTab = 'users';
         }
 
-        // Get users data with their links (only for admins)
         $users = [];
         if ($this->isGranted('ROLE_ADMIN')) {
             $userRepository = $entityManager->getRepository(User::class);
@@ -86,7 +86,6 @@ final class HomeController extends AbstractController
                 ->getResult();
         }
 
-        // Get links data with related entities (always visible)
         $linkRepository = $entityManager->getRepository(Link::class);
         $links = $linkRepository->createQueryBuilder('l')
             ->leftJoin('l.user', 'u')
@@ -96,7 +95,6 @@ final class HomeController extends AbstractController
             ->getQuery()
             ->getResult();
 
-        // Get all available tags for selection
         $tags = $entityManager->getRepository(Tag::class)->findAll();
 
         return $this->render('backoffice.html.twig', [
@@ -107,6 +105,10 @@ final class HomeController extends AbstractController
         ]);
     }
 
+    /**
+     * Suppression d'un utilisateur
+     * @route("/backoffice/user/{id}/delete", name="app_user_delete", methods={"POST"})
+     */
     #[Route('/backoffice/user/{id}/delete', name: 'app_user_delete', methods: ['POST'])]
     public function deleteUser(int $id, EntityManagerInterface $entityManager): Response
     {
@@ -125,10 +127,18 @@ final class HomeController extends AbstractController
         return $this->redirectToRoute('app_backoffice', ['tab' => 'users']);
     }
 
-    #[Route('/backoffice/user/create', name: 'app_user_create', methods: ['POST'])]
+    /**
+     * Création d'un utilisateur
+     * @route("/backoffice/user/create", name="app_user_create", methods={"GET", "POST"})
+     */
+    #[Route('/backoffice/user/create', name: 'app_user_create', methods: ['GET', 'POST'])]
     public function createUser(Request $request, EntityManagerInterface $entityManager): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        if ($request->isMethod('GET')) {
+            return $this->render('admin/user_create.html.twig');
+        }
 
         $username = $request->request->get('username');
         $password = $request->request->get('password');
@@ -139,7 +149,6 @@ final class HomeController extends AbstractController
             return $this->redirectToRoute('app_backoffice', ['tab' => 'users']);
         }
 
-        // Check if user already exists
         $existingUser = $entityManager->getRepository(User::class)->findOneBy(['username' => $username]);
         if ($existingUser) {
             $this->addFlash('error', 'Un utilisateur avec ce nom d\'utilisateur existe déjà.');
@@ -158,7 +167,11 @@ final class HomeController extends AbstractController
         return $this->redirectToRoute('app_backoffice', ['tab' => 'users']);
     }
 
-    #[Route('/backoffice/user/{id}/edit', name: 'app_user_edit', methods: ['POST'])]
+    /**
+     * Édition d'un utilisateur
+     * @route("/backoffice/user/{id}/edit", name="app_user_edit", methods={"GET", "POST"})
+     */
+    #[Route('/backoffice/user/{id}/edit', name: 'app_user_edit', methods: ['GET', 'POST'])]
     public function editUser(int $id, Request $request, EntityManagerInterface $entityManager): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
@@ -167,6 +180,12 @@ final class HomeController extends AbstractController
         if (!$user) {
             $this->addFlash('error', 'Utilisateur introuvable.');
             return $this->redirectToRoute('app_backoffice', ['tab' => 'users']);
+        }
+
+        if ($request->isMethod('GET')) {
+            return $this->render('admin/user_edit.html.twig', [
+                'user' => $user,
+            ]);
         }
 
         $username = $request->request->get('username');
@@ -190,6 +209,10 @@ final class HomeController extends AbstractController
         return $this->redirectToRoute('app_backoffice', ['tab' => 'users']);
     }
 
+    /**
+     * Suppression d'un lien
+     * @route("/backoffice/link/{id}/delete", name="app_link_delete", methods={"POST"})
+     */
     #[Route('/backoffice/link/{id}/delete', name: 'app_link_delete', methods: ['POST'])]
     public function deleteLink(int $id, EntityManagerInterface $entityManager): Response
     {
@@ -208,10 +231,21 @@ final class HomeController extends AbstractController
         return $this->redirectToRoute('app_backoffice', ['tab' => 'links']);
     }
 
-    #[Route('/backoffice/link/create', name: 'app_link_create', methods: ['POST'])]
+    /**
+     * Création d'un lien
+     * @route("/backoffice/link/create", name="app_link_create", methods={"GET", "POST"})
+     */
+    #[Route('/backoffice/link/create', name: 'app_link_create', methods: ['GET', 'POST'])]
     public function createLink(Request $request, EntityManagerInterface $entityManager): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
+
+        if ($request->isMethod('GET')) {
+            $tags = $entityManager->getRepository(Tag::class)->findAll();
+            return $this->render('admin/link_create.html.twig', [
+                'tags' => $tags,
+            ]);
+        }
 
         $title = $request->request->get('title');
         $url = $request->request->get('url');
@@ -231,24 +265,21 @@ final class HomeController extends AbstractController
         $link->setUser($this->getUser());
         $link->setCreatedAt(new \DateTime());
 
-        // Handle tags
         $tagRepository = $entityManager->getRepository(Tag::class);
 
-        // Add new tag if provided
         if (!empty($newTagName)) {
             $existingTag = $tagRepository->findOneBy(['name' => $newTagName]);
             if (!$existingTag) {
                 $newTag = new Tag();
                 $newTag->setName($newTagName);
                 $entityManager->persist($newTag);
-                $entityManager->flush(); // Flush to get ID
+                $entityManager->flush();
                 $selectedTags[] = $newTag->getId();
             } else {
                 $selectedTags[] = $existingTag->getId();
             }
         }
 
-        // Add selected existing tags
         foreach ($selectedTags as $tagId) {
             $tag = $tagRepository->find($tagId);
             if ($tag) {
@@ -263,7 +294,11 @@ final class HomeController extends AbstractController
         return $this->redirectToRoute('app_backoffice', ['tab' => 'links']);
     }
 
-    #[Route('/backoffice/link/{id}/edit', name: 'app_link_edit', methods: ['POST'])]
+    /**
+     * Édition d'un lien
+     * @route("/backoffice/link/{id}/edit", name="app_link_edit", methods={"GET", "POST"})
+     */
+    #[Route('/backoffice/link/{id}/edit', name: 'app_link_edit', methods: ['GET', 'POST'])]
     public function editLink(int $id, Request $request, EntityManagerInterface $entityManager): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
@@ -272,6 +307,14 @@ final class HomeController extends AbstractController
         if (!$link) {
             $this->addFlash('error', 'Lien introuvable.');
             return $this->redirectToRoute('app_backoffice', ['tab' => 'links']);
+        }
+
+        if ($request->isMethod('GET')) {
+            $tags = $entityManager->getRepository(Tag::class)->findAll();
+            return $this->render('admin/link_edit.html.twig', [
+                'link' => $link,
+                'tags' => $tags,
+            ]);
         }
 
         $title = $request->request->get('title');
@@ -289,15 +332,12 @@ final class HomeController extends AbstractController
         $link->setUrl($url);
         $link->setDesc($desc);
 
-        // Handle tags - remove all existing tags first
         foreach ($link->getTags() as $tag) {
             $link->removeTag($tag);
         }
 
-        // Handle tags
         $tagRepository = $entityManager->getRepository(Tag::class);
 
-        // Add new tag if provided
         if (!empty($newTagName)) {
             $existingTag = $tagRepository->findOneBy(['name' => $newTagName]);
             if (!$existingTag) {
@@ -311,7 +351,6 @@ final class HomeController extends AbstractController
             }
         }
 
-        // Add selected existing tags
         foreach ($selectedTags as $tagId) {
             $tag = $tagRepository->find($tagId);
             if ($tag) {
