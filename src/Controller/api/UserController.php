@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\api;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -44,17 +44,6 @@ final class UserController extends AbstractController
         ], $users);
 
         return $this->json(['users' => $data]);
-    }
-
-    //-- WEB PAGE RENDERING --
-    #[Route('/users', name: 'user_list', methods: ['GET'])]
-    public function listUsers(EntityManagerInterface $entityManager): Response
-    {
-        $users = $entityManager
-            ->getRepository(User::class)
-            ->findAll();
-
-        return $this->render('users/list.html.twig', ['users' => $users]);
     }
 
     #[OA\Post(
