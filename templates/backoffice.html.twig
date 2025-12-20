@@ -77,13 +77,11 @@
 													<div class="action-buttons">
 														<a href="{{ path('app_user_edit', {id: user.id}) }}" class="btn btn-sm btn-warning">
 															<i class="bi bi-pencil"></i>
-															Éditer
 														</a>
 														<form method="post" action="{{ path('app_user_delete', {id: user.id}) }}" style="display: inline;">
 															<input type="hidden" name="_token" value="{{ csrf_token('delete-user-' ~ user.id) }}">
 															<button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')">
 																<i class="bi bi-trash"></i>
-																Supprimer
 															</button>
 														</form>
 													</div>
@@ -158,17 +156,14 @@
 													<div class="action-buttons">
 														<a href="{{ link.url }}" target="_blank" class="btn btn-sm btn-info">
 															<i class="bi bi-box-arrow-up-right"></i>
-															Voir
 														</a>
 														<a href="{{ path('app_link_edit', {id: link.id}) }}" class="btn btn-sm btn-warning">
 															<i class="bi bi-pencil"></i>
-															Éditer
 														</a>
 														<form method="post" action="{{ path('app_link_delete', {id: link.id}) }}" style="display: inline;">
 															<input type="hidden" name="_token" value="{{ csrf_token('delete-link-' ~ link.id) }}">
 															<button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce lien ?')">
 																<i class="bi bi-trash"></i>
-																Supprimer
 															</button>
 														</form>
 													</div>
@@ -190,197 +185,4 @@
 			</div>
 		</div>
 	</div>
-
-	<!-- Modals -->
-	{% if is_granted('ROLE_ADMIN') %}
-		<!-- Add User Modal -->
-		<div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<form method="post" action="{{ path('app_user_create') }}">
-						<div class="modal-header">
-							<h5 class="modal-title" id="addUserModalLabel">Ajouter un utilisateur</h5>
-							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-						</div>
-						<div class="modal-body">
-							<input type="hidden" name="_token" value="{{ csrf_token('create-user') }}">
-							<div class="mb-3">
-								<label for="addUsername" class="form-label">Nom d'utilisateur *</label>
-								<input type="text" class="form-control" id="addUsername" name="username" required>
-							</div>
-							<div class="mb-3">
-								<label for="addPassword" class="form-label">Mot de passe *</label>
-								<input type="password" class="form-control" id="addPassword" name="password" required>
-							</div>
-							<div class="mb-3">
-								<label class="form-label">Rôles</label>
-								<div class="form-check">
-									<input class="form-check-input" type="checkbox" name="roles[]" value="ROLE_USER" id="addRoleUser" checked>
-									<label class="form-check-label" for="addRoleUser">Utilisateur</label>
-								</div>
-								<div class="form-check">
-									<input class="form-check-input" type="checkbox" name="roles[]" value="ROLE_ADMIN" id="addRoleAdmin">
-									<label class="form-check-label" for="addRoleAdmin">Administrateur</label>
-								</div>
-							</div>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-							<button type="submit" class="btn btn-primary">Créer</button>
-						</div>
-					</form>
-				</div>
-			</div>
-		</div>
-
-		<!-- Edit User Modal -->
-		<div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<form method="post" id="editUserForm">
-						<div class="modal-header">
-							<h5 class="modal-title" id="editUserModalLabel">Modifier un utilisateur</h5>
-							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-						</div>
-						<div class="modal-body">
-							<input type="hidden" name="_token" value="{{ csrf_token('edit-user') }}">
-							<div class="mb-3">
-								<label for="editUsername" class="form-label">Nom d'utilisateur *</label>
-								<input type="text" class="form-control" id="editUsername" name="username" required>
-							</div>
-							<div class="mb-3">
-								<label for="editPassword" class="form-label">Nouveau mot de passe (optionnel)</label>
-								<input type="password" class="form-control" id="editPassword" name="password">
-								<small class="form-text text-muted">Laissez vide pour conserver le mot de passe actuel</small>
-							</div>
-							<div class="mb-3">
-								<label class="form-label">Rôles</label>
-								<div class="form-check">
-									<input class="form-check-input" type="checkbox" name="roles[]" value="ROLE_USER" id="editRoleUser">
-									<label class="form-check-label" for="editRoleUser">Utilisateur</label>
-								</div>
-								<div class="form-check">
-									<input class="form-check-input" type="checkbox" name="roles[]" value="ROLE_ADMIN" id="editRoleAdmin">
-									<label class="form-check-label" for="editRoleAdmin">Administrateur</label>
-								</div>
-							</div>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-							<button type="submit" class="btn btn-warning">Modifier</button>
-						</div>
-					</form>
-				</div>
-			</div>
-		</div>
-	{% endif %}
-
-	<!-- Add Link Modal -->
-	<div class="modal fade" id="addLinkModal" tabindex="-1" aria-labelledby="addLinkModalLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<form method="post" action="{{ path('app_link_create') }}">
-					<div class="modal-header">
-						<h5 class="modal-title" id="addLinkModalLabel">Ajouter un lien</h5>
-						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-					</div>
-					<div class="modal-body">
-						<input type="hidden" name="_token" value="{{ csrf_token('create-link') }}">
-						<div class="mb-3">
-							<label for="addLinkTitle" class="form-label">Titre *</label>
-							<input type="text" class="form-control" id="addLinkTitle" name="title" required>
-						</div>
-						<div class="mb-3">
-							<label for="addLinkUrl" class="form-label">URL *</label>
-							<input type="url" class="form-control" id="addLinkUrl" name="url" required>
-						</div>
-						<div class="mb-3">
-							<label for="addLinkDesc" class="form-label">Description</label>
-							<textarea class="form-control" id="addLinkDesc" name="desc" rows="3"></textarea>
-						</div>
-						<div class="mb-3">
-							<label class="form-label">Tags</label>
-							<div class="border rounded p-2" style="max-height: 200px; overflow-y: auto;">
-								{% if tags is defined and tags|length > 0 %}
-									{% for tag in tags %}
-										<div class="form-check">
-											<input class="form-check-input" type="checkbox" name="tags[]" value="{{ tag.id }}" id="addTag{{ tag.id }}">
-											<label class="form-check-label" for="addTag{{ tag.id }}">
-												{{ tag.name }}
-											</label>
-										</div>
-									{% endfor %}
-								{% else %}
-									<p class="text-muted mb-0">Aucun tag disponible</p>
-								{% endif %}
-							</div>
-							<div class="mt-2">
-								<label for="addNewTag" class="form-label">Nouveau tag :</label>
-								<input type="text" class="form-control" id="addNewTag" name="new_tag" placeholder="Nom du nouveau tag (optionnel)">
-							</div>
-						</div>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-						<button type="submit" class="btn btn-primary">Créer</button>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
-
-	<!-- Edit Link Modal -->
-	<div class="modal fade" id="editLinkModal" tabindex="-1" aria-labelledby="editLinkModalLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<form method="post" id="editLinkForm">
-					<div class="modal-header">
-						<h5 class="modal-title" id="editLinkModalLabel">Modifier un lien</h5>
-						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-					</div>
-					<div class="modal-body">
-						<input type="hidden" name="_token" value="{{ csrf_token('edit-link') }}">
-						<div class="mb-3">
-							<label for="editLinkTitle" class="form-label">Titre *</label>
-							<input type="text" class="form-control" id="editLinkTitle" name="title" required>
-						</div>
-						<div class="mb-3">
-							<label for="editLinkUrl" class="form-label">URL *</label>
-							<input type="url" class="form-control" id="editLinkUrl" name="url" required>
-						</div>
-						<div class="mb-3">
-							<label for="editLinkDesc" class="form-label">Description</label>
-							<textarea class="form-control" id="editLinkDesc" name="desc" rows="3"></textarea>
-						</div>
-						<div class="mb-3">
-							<label class="form-label">Tags</label>
-							<div class="border rounded p-2" style="max-height: 200px; overflow-y: auto;">
-								{% if tags is defined and tags|length > 0 %}
-									{% for tag in tags %}
-										<div class="form-check">
-											<input class="form-check-input" type="checkbox" name="tags[]" value="{{ tag.id }}" id="editTag{{ tag.id }}">
-											<label class="form-check-label" for="editTag{{ tag.id }}">
-												{{ tag.name }}
-											</label>
-										</div>
-									{% endfor %}
-								{% else %}
-									<p class="text-muted mb-0">Aucun tag disponible</p>
-								{% endif %}
-							</div>
-							<div class="mt-2">
-								<label for="editNewTag" class="form-label">Nouveau tag :</label>
-								<input type="text" class="form-control" id="editNewTag" name="new_tag" placeholder="Nom du nouveau tag (optionnel)">
-							</div>
-						</div>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-						<button type="submit" class="btn btn-warning">Modifier</button>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
-
 {% endblock %}
