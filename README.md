@@ -34,15 +34,15 @@ _WATSON_ est une application de gestion et de mutualisation de liens. Son code s
 | Activité                                                    | Responsable(s)                      |
 | ----------------------------------------------------------- | --------------------                |
 | Initialisation et configuration de l'environnement dev      | Mathilde                            |
-| Modèle, interfaaces, et manipulation des données            | Filippos                            |
-| Authentification/inscription, Webroutes                     | Filippos                            |
+| Modèle, interfaces, repositories et bdd                     | Filippos                            |
+| Authentification, Inscription, Webroutes                    | Filippos                            |
 | API Liens                                                   | Mathieu                             |
 | API Tags                                                    | Mathilde                            |
 | UI Twig/CSS                                                 | Kamo                                |
 | Tests fonctionnels                                          | Filippos, Mathilde, Mathieu, Kamo   |
 | Documentation                                               | Filippos, Mathilde                  |
 
-Chacun des membres du groupe a contribué au projet selon ses disponibilités et compétences.Tout le monde s'est montré impliqué et investi dans le travail demandé.
+Chacun des membres du groupe a contribué au projet selon ses disponibilités et compétences. Tout le monde s'est montré impliqué et investi dans le travail demandé.
 
 ### Calendrier de suivi du projet
 
@@ -181,7 +181,7 @@ cd "./S4/watson-symfony"
 symfony server:start
 ```
 
-Se rendre à l'URL indiquée par le serveur, par exemple : <http://127.0.0.1:8000>.
+Se rendre à l'URL indiquée par le serveur, par exemple : [http://127.0.0.1:8000](http://127.0.0.1:8000).
 
 ![Home page Symfony](docs/home-page-symfony.png)
 
@@ -216,7 +216,7 @@ php bin/console app:populate-link-tag-associations # pour peupler la table des a
 
 Suites à ces commandes nous vérifions grâce à _DB Browser_ que la base de données a été correctement remplie.
 
-![DB Browser](/docs/dbbrowser.png)
+![DB Browser](docs/dbbrowser.png)
 
 ### Documentation et tests : _Nelmio_
 
@@ -240,19 +240,19 @@ Afin que chacune de ces requêtes soit documentée sur _Nelmio_, nous avons ajou
 
 Le contrôleur qui interroge la table des utilisateurs est exposé à la route `/api/users`. Quatre requêtes ont été codées.
 
-![NelmioUsers](/docs/nelmio_users.png)
+![NelmioUsers](docs/nelmio_users.png)
 
 ### Contrôleur _Liens_
 
 Le contrôleur qui interroge la table des liens est exposé à la route `/api/links`. Neuf requêtes ont été codées.
 
-![Nelmio routes links](/docs/nelmio_links.png)
+![Nelmio routes links](docs/nelmio_links.png)
 
 ### Contrôleur _Tags_
 
 Le contrôleur qui interroge la table des mots clés (tags) est exposé à la route `/api/tags`. Huit requêtes ont été codées. Nous avons également créé les différentes méthodes CRUD pour implementer le lien d'association entre les liens et les mots clés.
 
-![Nelmio routes tags](/docs/nelmio_tags.png)
+![Nelmio routes tags](docs/nelmio_tags.png)
 
 Plus précisément, nous avons modélisé la relation ManyToMany entre Link et Tag :
 
@@ -288,7 +288,7 @@ Il est à noter que nous avons également réalisé une protection contre la cr�
 
 L'interface de _Nelmio_, nous a servi pour tester l'API et nous assurer que toutes les routes pointent vers des requêtes valides. Ci-dessous, un exemple de la requête GET sur la route _/api/links_ :
 
-![Nelmio exemple test](/docs/test_getlinks.png)
+![Nelmio exemple test](docs/test_getlinks.png)
 
 La création de cette API a été ambitieuse et seulement une petite partie de ses méthodes a été reprise pour l'implémentation des routes publiques. Cependant elle pourra éventuellement servir dans la maintenance évolutive de l'application, notamment si l'on décide d'adopter une librairie frontend comme _React_ qui permettrait plus de liberté dans la manupulation des données au niveau de l'UI que les templates TWIG actuels.
 
@@ -304,11 +304,11 @@ Après avoir testé le bon fonctionnement de toutes les routes de l'API, nous av
 
 Dans son état actuel, notre projet a une architecture hybride. Il a commencé, à des fins de test, comme un projet API REST comme on pourrait en trouver dans la plupart des frameworks _NodeJS_ : on a créé des endpoints API (dans LinkController, UserController, TagsController) accessibles par des requêtes HTTP et qui ne servent qu'à la transmission pure d'informations entre le serveur et des clients sous format JSON.
 
-![API Diagram](/docs/apidiagram.png)
+![API Diagram](docs/apidiagram.png)
 
 Toutefois, la partie publique et "fonctionnelle" de l'application suit le modèle SSR (Server Side Rendering) telle qu'implémenté dans les contrôleurs _HomeController_ et _BackOfficeCOntroller_ : le serveur Symfony génère entièrement les pages HTML avant de les envoyer au navigateur. Plus précisément, ces contrôleurs reçoivent les requêtes HTTP, traitent les données, puis utilisent Twig pour produire le HTML final avant de l'envoyer au navigateur de l'utilisateur. Tout se passe côté serveur.
 
-![SSR Diagram](/docs/ssrdiagram.png)
+![SSR Diagram](docs/ssrdiagram.png)
 
 ## Authentification et inscription
 
@@ -322,13 +322,13 @@ php bin/console make:registration-form # pour ajouter un formulaire d'inscriptio
 
 Nous sommes intervenus au niveau du fichier `config/packages/security.yaml` pour sécuriser les routes en exigeant une authentification en cas de requêtes sur les routes de l'API et pour donner un accès public aux routes `/login`, `register` et `feed`
 
-![firewallApi](/docs/protecapiroutes.png)
+![firewallApi](docs/protecapiroutes.png)
 
-![PublicRoutes](/docs/publicroutes.png)
+![PublicRoutes](docs/publicroutes.png)
 
 La logique du _BackofficeController_ a été refactorisée également pour discriminer, concernant la disponibilité des deux onglets (utilisateurs, liens), en fonction des rôles des utilisateurs connectés : le rôle USER ne peut que ajouter/modifier/supprimer des liens alors que le rôle ADMIN peut en plus gérer les comptes des utilisateurs.
 
-![TagsBackofficePermissions](/docs/backofficetabs.png)
+![TagsBackofficePermissions](docs/backofficetabs.png)
 
 ## Front-end
 
@@ -352,11 +352,11 @@ Nous avons crée des templates supplémentaires:
 
 L'UI de l'application a été faite grâce à la librairie _Bootstrap_ installée dans les dépendances du projet (`assets/vendor/bootstrap/`) ainsi qu'au paquet _Bootstrap Icons_ importé via un CDN au niveau du template de base `templates\base.html.twig`. Des classes CSS personnalisées ont également été créées dans le fichier `assets\styles\app.css`.
 
-![Accueil](/docs/accueil.png)
+![Accueil](docs/accueil.png)
 
-![Connexion](/docs/signin.png)
+![Connexion](docs/signin.png)
 
-![Backoffice](/docs/backoffice.png)
+![Backoffice](docs/backoffice.png)
 
 ### Webographie
 
