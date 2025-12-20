@@ -37,7 +37,7 @@ Tous les membres du groupe ont contribué de manière équilibrée et proportion
 | ----------------------------------------------------------- | -------------------- |
 | Initialisation et configuration de l'environnement dev      | Mathilde             |
 | Modèle et manipulation des données                          | Filippos             |
-| API Users, authentification, inscription, Webroutes         | Filippos             |
+| API Users, authentification/inscription, Webroutes          | Filippos             |
 | API Liens                                                   | Mathieu              |
 | API Tags                                                    | Mathilde             |
 | UI Twig/CSS                                                 | Kamo                 |
@@ -101,7 +101,7 @@ symfony check:requirements`
 
 ### Création du projet Watson-Symfony
 
-#### Se placer dans le dossier de travail
+#### Initialisation
 
 Création d’un nouveau projet Symfony dans un dossier `watson-symfony` en forçant la version 6.4 LTS :
 `symfony new watson-symfony --version="6.4.*" --webapp
@@ -129,7 +129,7 @@ Se rendre à l'URL indiquée par le serveur : <http://127.0.0.1:8000>
 
 ![Home page Symfony](docs/home-page-symfony.png)
 
-### Mettre à jour du fichier .env
+### Mettre à jour le fichier .env
 
 - Modification du fichier _.env_ en renseignant l'URL correct de la base de données : `DATABASE_URL="sqlite:///%kernel.project_dir%/var/watson.db"`
 - Modification du fichier _.gitignore_ pour exclure le fichier _watson.db_ afin qu'il puisse être partagé avec les collaborateurs.
@@ -242,8 +242,9 @@ Toutefois, la partie publique et "fonctionnelle" de l'application suit le modèl
 
 Après avoir testé le bon fonctionnement de toutes les routes de l'API, nous avons implémenté les deux contrôleurs qui serviront à afficher les pages de l'application :
 
-- Nous avons repris l'ancient contrôleur déjà implémenté du flux RSS et l'avons exposé à l'URL : `/feed` ;
-- Nous avons également créé le contrôleur principal de l'application _HomeController_ qui reprend certaines méthodes testées lors de l'implémentation de l'API et retourne la page d'accueil ainsi que le backoffice.
+- reprise du contrôleur déjà implémenté `RSSFeedController` pour le flux RSS (`/feed`) ;
+- création du contrôleur `HomeController`pour gérer la page d'accueil et retourner la liste des liens (`/`) ;
+- création du contrôleur `BackOfficeController`pour gérer l'affichage du backoffice et les requêtes à la base de données (`/backoffice`).
 
 ## Authentification et inscription
 
@@ -270,11 +271,15 @@ Les templates `base.html.twig`, `login.html.twig` et `register.html.twig` ont é
 
 Le template `base.html.twig` comporte la mise en page générale du site avec la navbar et le footer : tous les autres templates en dépendent.
 
-Nous avons créer deux templates supplémentaires:
+Nous avons créer des templates supplémentaires:
 
 - `index.html.twig` qui constitue la page d'accueil du site permettant de visualiser l'ensemble des liens et offrant un champ de recherche ;
 
-- `templates\backoffice.html.twig` qui constitue la page du backoffice fonctionnant grâce à deux modales (et le script javascript nécessaire pour leur gestion) pour l'affichage et la gestion des utilisateurs et des liens.
+- `templates\backoffice.html.twig` qui constitue la page principale du backoffice qui liste les liens et kes utiliateurs dans les onglets dédiés ;
+
+- `templates\admin\link_create.html.twig` et `templates\admin\link_edit.html.twig`qui permettent d'ajouter ou modifier des liens ;
+
+- `templates\admin\user_create.html.twig` et `templates\admin\user_edit.html.twig` qui permetter d'ajouter ou modifier des utilisateurs.
 
 ### Interface utilisateur
 
