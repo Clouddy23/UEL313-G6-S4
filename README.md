@@ -22,8 +22,6 @@ _WATSON_ est une application de gestion et de mutualisation de liens. Son code s
 
 ### Membres du groupe
 
-Tous les membres du groupe ont contribué de manière équilibrée et proportionnelle au projet.
-
 | Étudiant.e  |   Alias    |
 | :---------: | :--------: |
 | Mathilde C. | Clouddy23  |
@@ -33,15 +31,18 @@ Tous les membres du groupe ont contribué de manière équilibrée et proportion
 
 ### Répartition du travail
 
-| Activité                                                    | Responsable(s)       |
-| ----------------------------------------------------------- | -------------------- |
-| Initialisation et configuration de l'environnement dev      | Mathilde             |
-| Modèle et manipulation des données                          | Filippos             |
-| API Users, authentification/inscription, Webroutes          | Filippos             |
-| API Liens                                                   | Mathieu              |
-| API Tags                                                    | Mathilde             |
-| UI Twig/CSS                                                 | Kamo                 |
-| Documentation                                               | Filippos, Mathilde   |
+| Activité                                                    | Responsable(s)                      |
+| ----------------------------------------------------------- | --------------------                |
+| Initialisation et configuration de l'environnement dev      | Mathilde                            |
+| Modèle, interfaaces, et manipulation des données            | Filippos                            |
+| Authentification/inscription, Webroutes                     | Filippos                            |
+| API Liens                                                   | Mathieu                             |
+| API Tags                                                    | Mathilde                            |
+| UI Twig/CSS                                                 | Kamo                                |
+| Tests fonctionnels                                          | Filippos, Mathilde, Mathieu, Kamo   |
+| Documentation                                               | Filippos, Mathilde                  |
+
+Chacun des membres du groupe a contribué au projet selon ses disponibilités et compétences.Tout le monde s'est montré impliqué et investi dans le travail demandé.
 
 ### Calendrier de suivi du projet
 
@@ -50,10 +51,10 @@ Tous les membres du groupe ont contribué de manière équilibrée et proportion
 |  15/12   | Phase d’installation : installation Symfony 6.4 LTS, préparation du repository.                   |
 |  16/12   | Visio d'organisation : répartition des tâches, création des issues/branches.                      |
 |  17/12   | Phase de développement                                                                            |
-|  18/12   | Phase de relecture : Review et correction des branches (PR).                                      |
+|  19/12   | Phase de relecture : Review et correction des branches (PR).                                      |
 |  20/12   | Fin du projet : Tests manuels fonctionnels, fusion des branches vers `main`, finalisation du PDF. |
 
-## Mise en place de l'environnement de développement
+## L'environnement de développement
 
 Tous les outils suivants doivent être disponibles “globalement” dans le terminal depuis n’importe quel dossier :
 
@@ -63,69 +64,124 @@ Tous les outils suivants doivent être disponibles “globalement” dans le ter
 - SQLite
 - DB Browser
 
-### Installation de Symfony CLI 6.4 LTS (MacOS + Terminal)
+### Installation de Symfony CLI 6.4 LTS
 
-#### Installation et vérification de la version de Homebrew (gestionnaire de paquets)
+#### Installation Homebrew (nécessaire sur MacOS)
 
-`/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 brew --version
-brew --version`
+```
 
-#### Installation et vérification de la version PHP
+#### Installation de PHP
 
-`brew update
+Sur MacOS :
+
+```bash
+brew update
 brew install php
-php -v`
+php -v
+```
 
-#### Vérification des extensions PHP requises
+Sur Debian :
 
-`php -m | grep -E "zip|sqlite|pdo_sqlite"`
+```bash
+sudo apt install php php-zip php-sqlite3 php-mbstring php-xml php-curl
+php -v
+```
 
-Le cas échéant, procéder à l'activation des extensions (suppression ";") :
-`php --ini
-extension=zip
-extension=pdo_sqlite
-extension=sqlite3`
+#### Extensions PHP requises
 
-#### Installation, mise à jour et vérification de la version de Composer
+Vérifier si les extensions nécessaires sont actives :
 
-`brew install composer
+```bash
+php -m | grep -E "zip|sqlite|pdo_sqlite"
+```
+
+Si ce n'est pas le cas, procéder à l'activation des extensions dans le fichier `php.ini` en décommentant (suppression de ";") les extensions suivantes : `extension=zip`, `extension=pdo_sqlite`, `extension=sqlite3`.
+
+#### Installation de Composer
+
+Sur MacOS :
+
+```bash
+brew install composer
 sudo composer self-update
-composer -V`
+composer -V
+```
 
-#### Installation et vérification de Symfony CLI et de ses prérequis
+Sur Debian :
 
-`brew install symfony-cli/tap/symfony-cli
+```bash
+sudo apt install composer
+composer -V
+```
+
+#### Installation de Symfony CLI
+
+Sur Mac :
+
+```bash
+brew install symfony-cli/tap/symfony-cli
 symfony -V
-symfony check:requirements`
+symfony check:requirements
+```
+
+Sur Debian :
+
+```bash
+curl -1sLf &#039;https://dl.cloudsmith.io/public/symfony/stable/setup.deb.sh&#039; | sudo -E bash &amp;&amp; 
+sudo apt install symfony-cli
+```
 
 ### Création du projet Watson-Symfony
 
 #### Initialisation
 
 Création d’un nouveau projet Symfony dans un dossier `watson-symfony` en forçant la version 6.4 LTS :
-`symfony new watson-symfony --version="6.4.*" --webapp
-cd watson-symfony`
+
+```bash
+symfony new watson-symfony --version="6.4.*" --webapp
+cd watson-symfony
+```
 
 #### Configurer de SQLite dans .env.local
 
 On copie .env vers .env.local afin de : préserver la configuration par défaut (.env) et permettre à chaque membre du groupe d’avoir sa configuration locale (.env.local) :
-`cp .env .env.local
-code .env.local`
+
+```bash
+cp .env .env.local
+code .env.local
+```
 
 Dans .env.local, activer DATABASE_URL="SQLite..." (supprimer #) et désactiver DATABASE_URL="postgesql..." (ajouter #).
 
 #### Installer DB Browser
 
 Avec SQLite, la BDD est un fichier .db qui sera créé lors des migrations (après création des entités).
-La visualisation et les manipulations de la BDD peuvent ensuite se faire grâce à l'installation de DBBrowser qui peut se faire via un exécutable sur Windows ou grâce au gestionnaire de paquets _HomeBrew_ sur Mac.
+
+La visualisation et les manipulations de la BDD peuvent ensuite se faire grâce à l'installation de DBBrowser qui peut se faire via le terminal.
+
+Sur Mac :
+
+```bash
+brew install --cask db-browser-for-sqlite
+```
+
+Sur Debian :
+
+```bash
+sudo apt install sqlitebrowser
+```
 
 #### Tester le serveur Symfony
 
-`cd "./S4/watson-symfony"
-symfony server:start`
+```bash
+cd "./S4/watson-symfony"
+symfony server:start
+```
 
-Se rendre à l'URL indiquée par le serveur : <http://127.0.0.1:8000>
+Se rendre à l'URL indiquée par le serveur, par exemple : <http://127.0.0.1:8000>.
 
 ![Home page Symfony](docs/home-page-symfony.png)
 
@@ -148,11 +204,15 @@ Nous avons pour finir créé plusieurs _Commandes_ pour trois commandes pour peu
 
 ### Création et mise en place de la base
 
-- `php bin/console doctrine:schema:create` pour créer la base de données _SQLite_ "watson.db"
-- `php bin/console app:create-admin-user` pour créer le premier adminitrateur de la base de données ;
-- `php bin/console app:populate-tags` pour peupler la table des tags ;
-- `php bin/console app:populate-links` pour peupler la table des liens ;
-- `php bin/console app:populate-link-tag-associations` pour peupler la table des associations entre link et tags.
+La base de données _SQLite_ est déjà partagée dans le dépôt. Mais si l'on souhaite l'effacer et la réinitialiser avec des données de test, voici la démarche à suivre :
+
+```bash
+php bin/console doctrine:schema:create # pour créer la base de données _SQLite_ "watson.db"
+php bin/console app:create-admin-user # pour créer le premier adminitrateur de la base de données
+php bin/console app:populate-tags # pour peupler la table des tags
+php bin/console app:populate-links # pour peupler la table des liens
+php bin/console app:populate-link-tag-associations # pour peupler la table des associations entre link et tags
+```
 
 Suites à ces commandes nous vérifions grâce à _DB Browser_ que la base de données a été correctement remplie.
 
@@ -160,7 +220,11 @@ Suites à ces commandes nous vérifions grâce à _DB Browser_ que la base de do
 
 ### Documentation et tests : _Nelmio_
 
-Pour faciliter la documentation, le codage et l'implementation des méthodes CRUD, nous avons installé _Nelmio_ avec la commande : `composer require nelmio/api-doc-bundle`
+Pour faciliter la documentation, le codage et l'implementation des méthodes CRUD, nous avons installé _Nelmio_ avec la commande :
+
+```bash
+composer require nelmio/api-doc-bundle
+```
 
 Pour le configurer, nous avons suivi la documentation disponible sur le site de [Symfony](https://symfony.com/bundles/NelmioApiDocBundle/current/index.html#installation).
 
@@ -168,7 +232,7 @@ L'interface de test est disponible sur la route [/api/doc](http://localhost:8000
 
 ## Codage de l'API
 
-Nous avons par la suite procédé au codage des différentes composantes de l'API pour et notamment des contrôleurs qui gèrent les différentes requêtes HTTP pour interroger la base des données.
+Nous avons par la suite procédé au codage des différentes composantes de l'API et notamment des contrôleurs qui gèrent les différentes requêtes HTTP pour interroger la base des données.
 
 Afin que chacune de ces requêtes soit documentée sur _Nelmio_, nous avons ajouté au dessus de chacune d'elles l'attribut correspondant commençant par `#[OA\METHOD(...)]`
 
@@ -226,40 +290,43 @@ L'interface de _Nelmio_, nous a servi pour tester l'API et nous assurer que tout
 
 ![Nelmio exemple test](/docs/test_getlinks.png)
 
-La création de cette API a été ambitieuse et seulement une petite partie de ses méthodes a été reprise pour l'implémentation des routes publiques. Cependant elle pourra éventuellement servir dans la maintenance évolutive de l'application, notamment si l'on décide d'adopter une librairie frontend comme _React_ qui permettrait plus de liberté dans la manupulation des données au niveau de l'UI que les templates TWIG.
-
-## Architectures : SSR vs API REST
-
-Dans son état actuel notre projet a une architecture hybride. Il a commencé, à des fins de test, comme un projet API REST comme on pourrait en trouver dans la plupart des frameworks _nodeJS_ : on a créé des endpoints API (dans LinkController, UserController, TagsController) accessibles par des requêtes HTTP et qui ne srvent qu'à la transmission pure d'informations entre le serveur et des clients sous format JSON.
-
-![API Diagram](/docs/apidiagram.png)
-
-Toutefois, la partie publique et "fonctionnelle" de l'application suit le modèle SSR (Server Side Rendering) telle qu'implémenté dans le contrôleur _HomeController_ : le serveur Symfony génère entièrement les pages HTML avant de les envoyer au navigateur. Plus précisément, ce contrôleur reçoit les requêtes HTTP, traite les données, puis utilise Twig pour produire le HTML final avant de l'envoyer au navigateur de l'utilisateur.
-
-![SSR Diagram](/docs/ssrdiagram.png)
+La création de cette API a été ambitieuse et seulement une petite partie de ses méthodes a été reprise pour l'implémentation des routes publiques. Cependant elle pourra éventuellement servir dans la maintenance évolutive de l'application, notamment si l'on décide d'adopter une librairie frontend comme _React_ qui permettrait plus de liberté dans la manupulation des données au niveau de l'UI que les templates TWIG actuels.
 
 ## Implémentation des routes Web
 
-Après avoir testé le bon fonctionnement de toutes les routes de l'API, nous avons implémenté les deux contrôleurs qui serviront à afficher les pages de l'application :
+Après avoir testé le bon fonctionnement de toutes les routes de l'API, nous avons implémenté les deux contrôleurs qui servent à afficher les pages de l'application :
 
 - reprise du contrôleur déjà implémenté `RSSFeedController` pour le flux RSS (`/feed`) ;
 - création du contrôleur `HomeController`pour gérer la page d'accueil et retourner la liste des liens (`/`) ;
 - création du contrôleur `BackOfficeController`pour gérer l'affichage du backoffice et les requêtes à la base de données (`/backoffice`).
 
+## Architectures : SSR vs API REST
+
+Dans son état actuel, notre projet a une architecture hybride. Il a commencé, à des fins de test, comme un projet API REST comme on pourrait en trouver dans la plupart des frameworks _NodeJS_ : on a créé des endpoints API (dans LinkController, UserController, TagsController) accessibles par des requêtes HTTP et qui ne servent qu'à la transmission pure d'informations entre le serveur et des clients sous format JSON.
+
+![API Diagram](/docs/apidiagram.png)
+
+Toutefois, la partie publique et "fonctionnelle" de l'application suit le modèle SSR (Server Side Rendering) telle qu'implémenté dans les contrôleurs _HomeController_ et _BackOfficeCOntroller_ : le serveur Symfony génère entièrement les pages HTML avant de les envoyer au navigateur. Plus précisément, ces contrôleurs reçoivent les requêtes HTTP, traitent les données, puis utilisent Twig pour produire le HTML final avant de l'envoyer au navigateur de l'utilisateur. Tout se passe côté serveur.
+
+![SSR Diagram](/docs/ssrdiagram.png)
+
 ## Authentification et inscription
 
-Nous avons mis en place un système d'authentification et d'inscription en suivant la documentation de [Symfony](https://symfony.com/doc/current/security.html)
+Nous avons mis en place un système d'authentification et d'inscription en suivant la documentation de [Symfony](https://symfony.com/doc/current/security.html) :
 
-- `composer require symfony/security-bundle`pour installer le _SecurityBundle_ qui ajoute toutes les fonctionnalités nécessaires à l'authentification ;
-- `php bin/console make:user` pour récréer une entité _User_ compatible avec Symfony. Nous avons dû procéder à des refactorisations et à la réinitialisation de la base de données;
-- `php bin/console make:registration-form` pour ajouter un formulaire d'inscription et les méthodes nécessaires pour l'enregistrement dun nouvel utilisateur
-- interventions au niveau du fichier `config/packages/security.yaml` pour sécuriser les routes en exigeant une authentification en cas de requêtes sur les routes de l'APIet en donnant un accès public aux routes de `/login`, `register` et `feed`
+```bash
+composer require symfony/security-bundle # pour installer le _SecurityBundle_ qui ajoute toutes les fonctionnalités nécessaires à l'authentification
+php bin/console make:user # pour récréer une entité _User_ compatible avec Symfony. Nous avons dû procéder à des refactorisations et à la réinitialisation de la base de données
+php bin/console make:registration-form # pour ajouter un formulaire d'inscription et les méthodes nécessaires pour l'enregistrement dun nouvel utilisateur
+```
+
+Nous sommes intervenus au niveau du fichier `config/packages/security.yaml` pour sécuriser les routes en exigeant une authentification en cas de requêtes sur les routes de l'API et pour donner un accès public aux routes `/login`, `register` et `feed`
 
 ![firewallApi](/docs/protecapiroutes.png)
 
 ![PublicRoutes](/docs/publicroutes.png)
 
-- inverventions également à l'intérieur de la route du _backoffice_ pour discriminer, concernant la disponibilité des deux onglets (utilisateurs, liens), en fonction des rôles des utilisateurs connectés : le rôle USER ne peut que ajouter/modifier/supprimer des liens alors que le rôle ADMIN peut en plus gérer les comptes des utilisateurs.
+La logique du _BackofficeController_ a été refactorisée également pour discriminer, concernant la disponibilité des deux onglets (utilisateurs, liens), en fonction des rôles des utilisateurs connectés : le rôle USER ne peut que ajouter/modifier/supprimer des liens alors que le rôle ADMIN peut en plus gérer les comptes des utilisateurs.
 
 ![TagsBackofficePermissions](/docs/backofficetabs.png)
 
@@ -269,17 +336,17 @@ Nous avons mis en place un système d'authentification et d'inscription en suiva
 
 Les templates `base.html.twig`, `login.html.twig` et `register.html.twig` ont été générés automatiquement par _Symfony_ pour le premier lors de la création du projet et, pour les deux autres, lors de l'installation du _SecurityBundle_.
 
-Le template `base.html.twig` comporte la mise en page générale du site avec la navbar et le footer : tous les autres templates en dépendent.
+Le template `base.html.twig` comporte la mise en page générale du site avec la _navbar_ et le _footer_ : tous les autres templates en dépendent.
 
-Nous avons créer des templates supplémentaires:
+Nous avons crée des templates supplémentaires:
 
 - `index.html.twig` qui constitue la page d'accueil du site permettant de visualiser l'ensemble des liens et offrant un champ de recherche ;
 
-- `templates\backoffice.html.twig` qui constitue la page principale du backoffice qui liste les liens et kes utiliateurs dans les onglets dédiés ;
+- `templates\backoffice.html.twig` qui constitue la page principale du backoffice qui liste les liens et les utiliateurs dans les onglets dédiés ;
 
 - `templates\admin\link_create.html.twig` et `templates\admin\link_edit.html.twig`qui permettent d'ajouter ou modifier des liens ;
 
-- `templates\admin\user_create.html.twig` et `templates\admin\user_edit.html.twig` qui permetter d'ajouter ou modifier des utilisateurs.
+- `templates\admin\user_create.html.twig` et `templates\admin\user_edit.html.twig` qui permettent d'ajouter ou modifier des utilisateurs.
 
 ### Interface utilisateur
 
