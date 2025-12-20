@@ -37,11 +37,11 @@ Tous les membres du groupe ont contribué de manière équilibrée et proportion
 | ----------------------------------------------------------- | -------------------- |
 | Initialisation et configuration de l'environnement dev      | Mathilde             |
 | Modèle et manipulation des données                          | Filippos             |
-| API Users, authentification, inscription                    | Filippos             |
+| API Users, authentification, inscription, Webroutes         | Filippos             |
 | API Liens                                                   | Mathieu              |
 | API Tags                                                    | Mathilde             |
 | UI Twig/CSS                                                 | Kamo                 |
-| Documentation + captures + PDF (README → PDF)               | Groupe 6             |
+| Documentation                                               | Filippos, Mathilde   |
 
 ### Calendrier de suivi du projet
 
@@ -226,7 +226,7 @@ L'interface de _Nelmio_, nous a servi pour tester l'API et nous assurer que tout
 
 ![Nelmio exemple test](/docs/test_getlinks.png)
 
-La création de cette API a été ambitieuse et seulement une petite partie de ses méthodes a été reprise pour l'implémentation des routes publiques. Cependant elle pourra éventuellement servir dans la maintenance évolutive de l'application, si elle est appelée à évoluer.
+La création de cette API a été ambitieuse et seulement une petite partie de ses méthodes a été reprise pour l'implémentation des routes publiques. Cependant elle pourra éventuellement servir dans la maintenance évolutive de l'application, notamment si l'on décide d'adopter une librairie frontend comme _React_ qui permettrait plus de liberté dans la manupulation des données au niveau de l'UI que les templates TWIG.
 
 ## Architectures : SSR vs API REST
 
@@ -276,7 +276,15 @@ Nous avons créer deux templates supplémentaires:
 
 - `templates\backoffice.html.twig` qui constitue la page du backoffice fonctionnant grâce à deux modales (et le script javascript nécessaire pour leur gestion) pour l'affichage et la gestion des utilisateurs et des liens.
 
-### Stylage et responsivité
+### Interface utilisateur
+
+L'UI de l'application a été faite grâce à la librairie _Bootstrap_ installée dans les dépendances du projet (`assets/vendor/bootstrap/`) ainsi qu'au paquet _Bootstrap Icons_ importé via un CDN au niveau du template de base `templates\base.html.twig`. Des classes CSS personnalisées ont également été créées dans le fichier `assets\styles\app.css`.
+
+![Accueil](/docs/accueil.png)
+
+![Connexion](/docs/signin.png)
+
+![Backoffice](/docs/backoffice.png)
 
 ### Webographie
 
